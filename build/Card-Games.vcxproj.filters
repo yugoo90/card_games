@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\controller\GameActions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\game\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\AI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\Card.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\CardGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\CardSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\CrazyEights.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\CrazyEightsAI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\Deck.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\DeckGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\Discard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\GoFish.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\GoFishAI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\Hand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\Human.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\JungleSpeed.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\JungleSpeedAI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\JungleSpeedCard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\model\StandardCard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\yugoo90\Repos\CardGames\card_games\src\view\UI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\yugoo90\Repos\CardGames\card_games\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{BD928D25-7D2A-3B07-984E-0DE2AFA27F82}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -14,7 +14,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/include/view
 )
 
+# Collect all .cpp files in the directory
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+
 # Add Executeable 
-add_executable(Card-Games
-        
-)
+add_executable(Card-Games ${SOURCES})

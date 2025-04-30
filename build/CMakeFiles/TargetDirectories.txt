@@ -1,0 +1,3 @@
+C:/Users/yugoo90/Repos/CardGames/card_games/build/CMakeFiles/Card-Games.dir
+C:/Users/yugoo90/Repos/CardGames/card_games/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/yugoo90/Repos/CardGames/card_games/build/CMakeFiles/ZERO_CHECK.dir
