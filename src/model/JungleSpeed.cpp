@@ -1,4 +1,5 @@
-#include <unistd.h>
+#include <chrono>
+#include <thread>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -288,7 +289,8 @@ Player* JungleSpeed::duel(std::vector<Player*> playersDuel,
     std::cout << " flipped a ";
     p->hand.getTop()->displayCard();
     std::cout << std::endl;
-    usleep(2000000);
+    //usleep(2000000);
+    std::this_thread::sleep_for(std::chrono::seconds(2000000));
     transferCards(&(p->hand), flippedCards[p->getID()], p-> hand.getTop());
     JungleSpeedCard* temp1 = dynamic_cast<JungleSpeedCard*>
     (flippedCards[p->getID()]-> getTop());

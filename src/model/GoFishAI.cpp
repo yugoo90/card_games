@@ -70,7 +70,9 @@
     if (storePlayer != -1) {
       return temp[storePlayer];
     } else {
-    std::random_shuffle(std::begin(temp), std::end(temp));
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(std::begin(temp), std::end(temp), g);
     Player* requestedPlayer = temp[0];
     if (requestedPlayer->getID() == (id)) {
       requestedPlayer = temp[1];
