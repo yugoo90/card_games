@@ -7,6 +7,7 @@
 #define CARDGENERATOR_H_INCLUDED
 
 #include <string>
+#include <memory>
 #include "Card.h"
 #include "StandardCard.h"
 #include "JungleSpeedCard.h"
@@ -33,6 +34,7 @@ class CardGenerator {
   * @return A pointer to the StandardCard that was made.
   */
   StandardCard* makeStandardCard(const int typeOfSuit, const int valueOfCard);
+
 
   /**
   * Makes a JungleSpeedCard with a name and color.
