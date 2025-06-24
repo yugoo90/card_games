@@ -15,7 +15,17 @@ include_directories(
 )
 
 # Collect all .cpp files in the directory
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE ALL_SOURCES "src/*.cpp")
+
+# Filter out anything from src/service/
+set(SOURCES "")
+foreach(file ${ALL_SOURCES})
+    if(NOT file MATCHES ".*/service/.*")
+        list(APPEND SOURCES ${file})
+    endif()
+    
+endforeach(file ${ALL_SOURCES})
+
 
 # Add Executeable 
 add_executable(Card-Games ${SOURCES})
