@@ -1,6 +1,6 @@
 /**
-* @author Hatash
-* @date 2021-4
+* @author Yugoo
+* @date 2025-6
 */
 
 #ifndef CARDGENERATOR_H_INCLUDED
