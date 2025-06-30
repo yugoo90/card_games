@@ -7,6 +7,12 @@ project(Card-Games)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# Point to oatpp's CMake config directory
+set(CMAKE_PREFIX_PATH "C:/Users/yugoo90/oat2/oatpp/install/./c")
+
+# Find oatpp
+find_package(oatpp REQUIRED)
+
 # Include
 include_directories(
     ${CMAKE_SOURCE_DIR}/include/model
@@ -15,17 +21,12 @@ include_directories(
 )
 
 # Collect all .cpp files in the directory
-file(GLOB_RECURSE ALL_SOURCES "src/*.cpp")
-
-# Filter out anything from src/service/
-set(SOURCES "")
-foreach(file ${ALL_SOURCES})
-    if(NOT file MATCHES ".*/service/.*")
-        list(APPEND SOURCES ${file})
-    endif()
-    
-endforeach(file ${ALL_SOURCES})
-
+file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 # Add Executeable 
 add_executable(Card-Games ${SOURCES})
+
+# Link oatpp
+target_link_libraries(Card-Games
+    oatpp::oatpp
+)
