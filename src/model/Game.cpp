@@ -15,21 +15,15 @@
 #include "Hand.h"
 #include "Game.h"
 
-  Game::Game(const int decks, std::vector <Player*> p) {
+  Game::Game(const int decks, std::vector <std::shared_ptr<Player>> p) {
     numPlayers = p.size();
     numDecks = decks;
     Players = p;
   }
 
-  Game::~Game() {
-    for (auto p : Players) {
-      delete p;
-    }
-    delete mainDeck;
-    mainDeck = nullptr;
-  }
+  Game::~Game() {}
 
-  std::vector<Player*> Game::getPlayers() const {
+  std::vector<std::shared_ptr<Player>> Game::getPlayers() const {
     return Players;
   }
 
@@ -64,7 +58,7 @@
   }
   std::vector<int>::iterator itr = v.begin();
   int temp = *std::max_element(itr, (itr + (*this).getNumPlayers()));
-  std::vector<Player*> p1;
+  std::vector<std::shared_ptr<Player>> p1;
   for (auto it = Players.begin(); it != Players.end(); it++) {
     if ((*it)->getTotalPoints() == temp) {
       p1.push_back(*it);
@@ -95,14 +89,14 @@
   void Game::dealCards(int handSize) {
     for (int i = 0; i< handSize; i++) {
       for (auto it = Players.begin(); it != Players.end(); it++) {
-        transferCards(mainDeck, &((*it)->hand), mainDeck->getTop());
+        transferCards(mainDeck, ((*it)->hand), mainDeck->getTop());
     }
   }
 }
 
-void Game::transferCards(CardSet* location, CardSet* destination,
-  const Card* c) {
-  Card* temp = location->getCard(c);
+void Game::transferCards(std::shared_ptr<CardSet> location, std::shared_ptr<CardSet> destination,
+  const std::shared_ptr<Card> c) {
+  auto temp = location->getCard(c);
   location->removeCard(c);
   destination->addCard(temp);
 }
@@ -124,15 +118,15 @@ void Game::round(std::istream& userInput) {
 }
 
 void Game::resetGame() {
-  std::vector<Card*> hnd;
-  const int stockPileSize = stockPile.getSize();
+  std::vector<std::shared_ptr<Card>> hnd;
+  const int stockPileSize = stockPile->getSize();
   for (int i = 0; i < stockPileSize; i++) {
-    transferCards(&stockPile, mainDeck, stockPile.getTop());
+    transferCards(stockPile, mainDeck, stockPile->getTop());
   }
   for (auto it = Players.begin(); it != Players.end(); it++) {
-    hnd = (*it)-> hand.getHand();
+    hnd = (*it)-> hand->getHand();
     for (int i = 0; i < hnd.size(); i++) {
-      transferCards(&((*it)->hand), mainDeck, hnd[i]);
+      transferCards(((*it)->hand), mainDeck, hnd[i]);
     }
   }
   for (int i = 0; i < Players.size(); i++) {
@@ -184,6 +178,6 @@ void Game::quitGame() {
 }
 
 int Game::getTopNumber() {
-  StandardCard* topCard = dynamic_cast<StandardCard*>(stockPile.getTop());
+  std::shared_ptr<StandardCard> topCard = std::dynamic_pointer_cast<StandardCard>(stockPile->getTop());
   return topCard->getValue();
 }

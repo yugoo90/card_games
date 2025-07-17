@@ -71,21 +71,21 @@ class JungleSpeedCard : public Card {
   * @param Card& c card to compare to.
   * @return true if both card objects are the same thing.
   */
-  bool operator==(const Card& c);
+  bool operator==(const std::shared_ptr<Card> c);
 
   /**
   * To compare two cards and see if they have the same colour
   * @param JungleSpeedCard& c the card to compare to.
   * @return true if both cards have same color, false otherwise.
   */
-  bool sameColour(const JungleSpeedCard& c);
+  bool sameColour(const std::shared_ptr<JungleSpeedCard> c);
 
   /**
   * To compare two cards and see if they have the same name
   * @param JungleSpeedCard& c the card to compare to.
   * @return true if both cards have same name, false otherwise.
   */
-  bool sameName(const JungleSpeedCard& c);
+  bool sameName(const std::shared_ptr<JungleSpeedCard> c);
 
  private:
   std::string name;

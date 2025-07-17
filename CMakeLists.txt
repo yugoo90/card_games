@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Point to oatpp's CMake config directory
-set(CMAKE_PREFIX_PATH "C:/Users/yugoo90/oat2/oatpp/install/./c")
+set(CMAKE_PREFIX_PATH "C:/Users/yugoo90/oat2/oatpp/install")
 
 # Find oatpp
 find_package(oatpp REQUIRED)

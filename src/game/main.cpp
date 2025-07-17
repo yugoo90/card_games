@@ -32,9 +32,8 @@ std::cout << "\n\n\t\t\tSoftware Program." << std::endl << std::endl;
 std::this_thread::sleep_for(std::chrono::milliseconds(500));
 std::cout << "This is the Main Menu\n";
   do {
-    Game* g = mainMenu.createGame(std::cin);
+    std::shared_ptr<Game> g = mainMenu.createGame(std::cin);
     g->play(std::cin);
-    delete g;
     std::cout << " This is the Main Menu" << std::endl << std::endl;
     std::cout << "Would you like to play another game? (y/n): ";
     std::cin >> response;

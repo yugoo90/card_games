@@ -6,6 +6,7 @@
 #ifndef CRAZYEIGHTSAI_H_INCLUDED
 #define CRAZYEIGHTSAI_H_INCLUDED
 
+#include <iostream>
 #include <vector>
 #include <string>
 #include "AI.h"
@@ -34,10 +35,10 @@ class CrazyEightsAI : public AI {
 * @param c is the top card of the StockPile.
 * @return the card that strategy chose to play.
 */
-  Card* strategy(Card* c);
+  std::shared_ptr<Card> strategy(std::shared_ptr<Card> c);
 
  private:
-  std::vector<Card*> legalCards = {};
+  std::vector<std::shared_ptr<Card>> legalCards = {};
 };
 
 #endif

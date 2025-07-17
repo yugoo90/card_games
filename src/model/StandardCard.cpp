@@ -30,16 +30,16 @@
     return suitName;
   }
 
-  bool StandardCard::sameRank(const StandardCard& c) {
-    if ((((*this).getValue()) == (c.getValue()))) {
+  bool StandardCard::sameRank(const std::shared_ptr<StandardCard> c) {
+    if ((((*this).getValue()) == (c->getValue()))) {
       return true;
     } else {
       return false;
     }
   }
 
-  bool StandardCard::sameSuit(const StandardCard& c) {
-    if ((((*this).getSuit()) == (c.getSuit()))) {
+  bool StandardCard::sameSuit(const std::shared_ptr<StandardCard> c) {
+    if ((((*this).getSuit()) == (c->getSuit()))) {
       return true;
     } else {
       return false;
@@ -54,8 +54,8 @@
     return toDisplay;
   }
 
-  bool StandardCard::operator==(const Card& c) {
-    const StandardCard& temp = dynamic_cast<const StandardCard&>(c);
+  bool StandardCard::operator==(const std::shared_ptr<Card> c) {
+    const std::shared_ptr<StandardCard> temp = std::dynamic_pointer_cast<StandardCard>(c);
     if ((*this).sameSuit(temp) && (*this).sameRank(temp))
     return true;
     return false;

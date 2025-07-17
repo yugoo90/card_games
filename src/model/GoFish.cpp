@@ -13,7 +13,7 @@
 #include "GameActions.h"
 #include "InputHandling.h"
 
-  GoFish::GoFish(const int decks, std::vector <Player*> p) :
+  GoFish::GoFish(const int decks, std::vector<std::shared_ptr<Player>> p) :
   Game{decks, p} {
     type = Game::GOFISH;
     HAND_SIZE = 7;
@@ -60,14 +60,14 @@
 
   void GoFish::makeBook(const int cardRank) {
     GameActions selfRequest;
-    std::vector<Card*> v1;
-    StandardCard* temp;
+    std::vector<std::shared_ptr<Card>> v1;
+    std::shared_ptr<StandardCard> temp;
     for (auto it = Players.begin(); it != Players.end(); it++) {
       if ((*it)->getMyTurn()) {
         v1 = selfRequest.makeRequest((*it), cardRank);
-        temp = dynamic_cast<StandardCard*>(v1[0]);
+        temp = std::dynamic_pointer_cast<StandardCard>(v1[0]);
         for (auto itr = v1.begin(); itr != v1.end(); itr++) {
-          transferCards(&((*it)->hand), &stockPile, (*itr));
+          transferCards(((*it)->hand), stockPile, (*itr));
         }
         (*it)->setRoundPoints((*it)->getRoundPoints()+1);
         std::cout << ((*it == Players[0])? "You" : (*it)->getName());
@@ -90,17 +90,17 @@
   void GoFish::goFish() {
     for (auto it = Players.begin(); it != Players.end(); it++) {
       if ((*it)->getMyTurn()) {
-        transferCards(mainDeck, &((*it)->hand), mainDeck->getTop());
+        transferCards(mainDeck, ((*it)->hand), mainDeck->getTop());
       }
     }
   }
 
-  void GoFish::playerTurn(Player* p, std::istream& userInput) {
+  void GoFish::playerTurn(std::shared_ptr<Player> p, std::istream& userInput) {
     std::string requestedRank;
-    Player* requestedAI;
+    std::shared_ptr<Player> requestedAI;
     GameActions request;
     int convertedString;
-    std::vector<Card*> temporaryHand;
+    std::vector<std::shared_ptr<Card>> temporaryHand;
     p->setMyTurn(true);
     if (hasBook(p) > 0) {
       makeBook(hasBook(p));
@@ -111,7 +111,7 @@
         return;
       }
       do {
-        if ((p-> hand.getSize() == 0) && (mainDeck-> getSize() == 0)) {
+        if ((p-> hand->getSize() == 0) && (mainDeck-> getSize() == 0)) {
           std::cout << "There are no cards left in the deck and in your" <<
           " hand " << p->getName() << ", skipping turn." << std::endl;
           p->setMyTurn(false);
@@ -119,13 +119,13 @@
           return;
         }
         //usleep(1000000);
-        p->hand.display();
-        temporaryHand = p->hand.getHand();
+        p->hand->display();
+        temporaryHand = p->hand->getHand();
         if (temporaryHand.size() == 0) {
           std::cout << "A card has been added to your hand" << std::endl;
-          transferCards(mainDeck, &(p->hand), mainDeck->getTop());
+          transferCards(mainDeck, (p->hand), mainDeck->getTop());
           //usleep(1000000);
-          p->hand.display();
+          p->hand->display();
         }
         std::cout << "What would you like to do, " << p->getName() << "?"
         << std::endl << std::endl;
@@ -206,17 +206,17 @@ std::cout << std::endl;
   } while (p->getMyTurn() && !gameOver);
 }
 
-  void GoFish::AITurn(Player* p) {
-    GoFishAI* temp = dynamic_cast<GoFishAI*>(p);
+  void GoFish::AITurn(std::shared_ptr<Player> p) {
+    std::shared_ptr<GoFishAI> temp = std::dynamic_pointer_cast<GoFishAI>(p);
     GameActions selfRequest;
-    std::vector<Card*> temporaryHand;
+    std::vector<std::shared_ptr<Card>> temporaryHand;
     p->setMyTurn(true);
     if (hasBook(p) > 0) {
       makeBook(hasBook(p));
     }
 
     do {
-      if ((p-> hand.getSize() == 0) && (mainDeck-> getSize() == 0)) {
+      if ((p-> hand->getSize() == 0) && (mainDeck-> getSize() == 0)) {
         std::cout << "There are no cards left in the deck and in ";
         std::cout << p->getName() << "\'s hand.... skipping turn.\n"
         << std::endl;
@@ -228,14 +228,14 @@ std::cout << std::endl;
         //usleep(1000000);
         return;
       }
-      temporaryHand = p->hand.getHand();
+      temporaryHand = p->hand->getHand();
       int requestedRank;
-      Player* requestedPlayer;
-      StandardCard* returnedCard;
+      std::shared_ptr<Player> requestedPlayer;
+      std::shared_ptr<StandardCard> returnedCard;
       if (temporaryHand.size() == 0) {
-        transferCards(mainDeck, &(p->hand), mainDeck->getTop());
+        transferCards(mainDeck, (p->hand), mainDeck->getTop());
       }
-      returnedCard = dynamic_cast<StandardCard*>(temp->strategy(previousAsk));
+      returnedCard = std::dynamic_pointer_cast<StandardCard>(temp->strategy(previousAsk));
       requestedRank = returnedCard-> getValue();
 
       previousAsk[p->getID()].push_back(requestedRank);
@@ -252,8 +252,8 @@ std::cout << std::endl;
     } while (p->getMyTurn() && !gameOver);
   }
 
-  void GoFish::requestHandler(Player* requester, Player* requestee,
-    std::vector<Card*> returnedVector) {
+  void GoFish::requestHandler(std::shared_ptr<Player> requester, 
+    std::shared_ptr<Player> requestee, std::vector<std::shared_ptr<Card>> returnedVector) {
     if (returnedVector.size() == 0) {
     std::cout << ((requester == Players[0])? "You" : requester->getName())
     << " had to go fish." << std::endl;
@@ -275,10 +275,10 @@ std::cout << std::endl;
 
     requester->setMyTurn(false);
 } else {
-  StandardCard* temp2;
+  std::shared_ptr<StandardCard> temp2;
   for (int i = 0; i < returnedVector.size(); i++) {
-  temp2 = dynamic_cast<StandardCard*>(returnedVector.at(i));
-  transferCards(&(requestee->hand), &(requester->hand), temp2);
+  temp2 = std::dynamic_pointer_cast<StandardCard>(returnedVector.at(i));
+  transferCards((requestee->hand), (requester->hand), temp2);
   }
 
   std::cout << std::endl << requestee->getName() << " gave " <<
@@ -293,8 +293,8 @@ std::cout << std::endl;
   }
 }
 
-int GoFish::hasBook(Player* p) {
-  std::vector<Card*> returnedCards;
+int GoFish::hasBook(std::shared_ptr<Player> p) {
+  std::vector<std::shared_ptr<Card>> returnedCards;
   GameActions selfRequest;
 
   for (int i = 1; i <= 13; i++) {

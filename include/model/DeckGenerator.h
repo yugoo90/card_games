@@ -6,6 +6,7 @@
 #ifndef DECKGENERATOR_H_INCLUDED
 #define DECKGENERATOR_H_INCLUDED
 
+#include <memory>
 #include <string>
 #include "Deck.h"
 #include "Game.h"
@@ -31,30 +32,30 @@ class DeckGenerator {
   * @param t a string representing the type of game deck to be created.
   * @return a deck of cards.
   */
-  Deck* makeDeck(const Game::GameType t);
+  std::shared_ptr<Deck> makeDeck(const Game::GameType t);
 
   /**
   * Makes a deck
   * @param t a string representing the type of game deck to be created.
-  * @param MoreThan2Players allows us to check if there are two or more players
+  * @param twoPlayers allows us to check if there are two or more players
   * when creating a deck.
   * @return a deck of cards.
   */
-  Deck* makeDeck(const Game::GameType t, const bool twoPlayers);
+  std::shared_ptr<Deck> makeDeck(const Game::GameType t, const bool twoPlayers);
 
   /**
   * Makes a deck
   * @param d empty deck*
   * @return a deck of cards.
   */
-  Deck* makeStandardDeck(Deck* d);
+  std::shared_ptr<Deck> makeStandardDeck(std::shared_ptr<Deck> d);
 
   /**
   * Makes a deck
   * @param d empty deck*
   * @return a deck of cards.
   */
-  Deck* make72JungleSpeed(Deck* d);
+  std::shared_ptr<Deck> make72JungleSpeed(std::shared_ptr<Deck> d);
 
   /**
   * Adds special cards to a JungleSpeed deck.
@@ -62,7 +63,7 @@ class DeckGenerator {
   * @param d JungleSpeed deck with 72 cards.
   * @return an 80 card deck.
   */
-  Deck* makeExtraJungleSpeed(Deck* d);
+  std::shared_ptr<Deck> makeExtraJungleSpeed(std::shared_ptr<Deck> d);
 };
 
 #endif

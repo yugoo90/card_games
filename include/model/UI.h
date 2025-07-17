@@ -47,7 +47,7 @@ class UI {
   * @param userInput
   * @return a Game pointer
   */
-  Game* createGame(std::istream& userInput);
+  std::shared_ptr<Game> createGame(std::istream& userInput);
 
   /**
   * @param userInput is the choice of the number of opponents
@@ -68,7 +68,7 @@ class UI {
   * @param s the name of the player
   * @return The pointer to the player
   */
-  Player* createHuman(std::string s);
+  std::shared_ptr<Player> createHuman(std::string s);
 
   /**
   * Generates AI depending on game choice.
@@ -77,7 +77,7 @@ class UI {
   * @param t the type of Game
   * @param id the id of the AI player.
   */
-  Player* generateAI(Game::GameType t, AI::Level l, int id);
+  std::shared_ptr<Player> generateAI(Game::GameType t, AI::Level l, int id);
 
   /**
    * Creates the players vector so it can be passed into the
@@ -86,7 +86,7 @@ class UI {
    * @param userInput
    * @return a vector of Player*
    */
-  std::vector<Player*> createPlayers(Game::GameType gameChoice,
+  std::vector<std::shared_ptr<Player>> createPlayers(Game::GameType gameChoice,
     std::istream& userInput);
 };
 

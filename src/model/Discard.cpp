@@ -18,18 +18,18 @@ std::cout << "|░░░░░░░░░|" << std::endl;
 std::cout << "|░+---------+" << std::endl;
 std::cout << "|░|░░░░░░░░░|" << std::endl;
 std::cout << "|░|░+---------+" << std::endl;
-std::cout << "|░|░|" << dynamic_cast<StandardCard*>(
+std::cout << "|░|░|" << std::dynamic_pointer_cast<StandardCard>(
   cards[cards.size()-1])->cardValue()
-<< (dynamic_cast<StandardCard*>(
+<< (std::dynamic_pointer_cast<StandardCard>(
   cards[cards.size()-1])->getValue() == 10? "       |" :
 "        |") << std::endl;
 std::cout << "+-|░|         |" << std::endl;
-std::cout << "  |░|    " << dynamic_cast<StandardCard*>(
+std::cout << "  |░|    " << std::dynamic_pointer_cast<StandardCard>(
   cards[cards.size()-1])->suitValue() << "    |" << std::endl;
 std::cout << "  +-|         |" << std::endl;
-std::cout << "    " << (dynamic_cast<StandardCard*>(
+std::cout << "    " << (std::dynamic_pointer_cast<StandardCard>(
   cards[cards.size()-1])->getValue() == 10? "|       " :
-"|        ") << dynamic_cast<StandardCard*>(cards[cards.size()-1])->cardValue()
+"|        ") << std::dynamic_pointer_cast<StandardCard>(cards[cards.size()-1])->cardValue()
 << "|" << std::endl;
 std::cout << "    +---------+" << std::endl << std::endl;
 } else {

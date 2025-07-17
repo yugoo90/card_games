@@ -34,9 +34,9 @@ void Hand::display() const {
   std::cout << std::endl;
   cardPosn = cardsInRow*j;
   for (int i = 0; i < cardsInRow; i++) {
-    std::cout << "|" << dynamic_cast<StandardCard*>(
+    std::cout << "|" << std::dynamic_pointer_cast<StandardCard>(
       cards[cardPosn])->cardValue()
-    << (dynamic_cast<StandardCard*>(
+    << (std::dynamic_pointer_cast<StandardCard>(
       cards[cardPosn])->getValue() == 10? "       |  " :
     "        |  ");
     cardPosn++;
@@ -48,7 +48,7 @@ void Hand::display() const {
   }
   std::cout << std::endl;
   for (int i = 0; i < cardsInRow; i++) {
-    std::cout << "|    " << dynamic_cast<StandardCard*>(
+    std::cout << "|    " << std::dynamic_pointer_cast<StandardCard>(
       cards[cardPosn])->suitValue() << "    |  ";
     cardPosn++;
   }
@@ -59,9 +59,9 @@ void Hand::display() const {
   }
   std::cout << std::endl;
   for (int i = 0; i < cardsInRow; i++) {
-    std::cout << (dynamic_cast<StandardCard*>(
+    std::cout << (std::dynamic_pointer_cast<StandardCard>(
       cards[cardPosn])->getValue() == 10? "|       " :
-    "|        ") << dynamic_cast<StandardCard*>(cards[cardPosn])->cardValue()
+    "|        ") << std::dynamic_pointer_cast<StandardCard>(cards[cardPosn])->cardValue()
     << "|  ";
     cardPosn++;
   }
@@ -80,8 +80,8 @@ for (int i = 0; i < remainder; i++) {
 }
 std::cout << std::endl;
 for (int i = 0; i < remainder; i++) {
-  std::cout << "|" << dynamic_cast<StandardCard*>(cards[cardPosn])->cardValue()
-  << (dynamic_cast<StandardCard*>(
+  std::cout << "|" << std::dynamic_pointer_cast<StandardCard>(cards[cardPosn])->cardValue()
+  << (std::dynamic_pointer_cast<StandardCard>(
     cards[cardPosn])->getValue() == 10? "       |  " :
   "        |  ");
   cardPosn++;
@@ -94,7 +94,7 @@ for (int i = 0; i < remainder; i++) {
 std::cout << std::endl;
 for (int i = 0; i < remainder; i++) {
   std::cout << "|    "
-  << dynamic_cast<StandardCard*>(cards[cardPosn])->suitValue() << "    |  ";
+  << std::dynamic_pointer_cast<StandardCard>(cards[cardPosn])->suitValue() << "    |  ";
   cardPosn++;
 }
 cardPosn = cards.size() - remainder;
@@ -104,9 +104,9 @@ for (int i = 0; i < remainder; i++) {
 }
 std::cout << std::endl;
 for (int i = 0; i < remainder; i++) {
-  std::cout << (dynamic_cast<StandardCard*>(
+  std::cout << (std::dynamic_pointer_cast<StandardCard>(
     cards[cardPosn])->getValue() == 10? "|       " :
-  "|        ") << dynamic_cast<StandardCard*>(cards[cardPosn])->cardValue()
+  "|        ") << std::dynamic_pointer_cast<StandardCard>(cards[cardPosn])->cardValue()
   << "|  ";
   cardPosn++;
 }
@@ -120,6 +120,6 @@ std::cout << std::endl << std::endl;
 }
 }
 
-std::vector<Card*> Hand::getHand() {
+std::vector<std::shared_ptr<Card>> Hand::getHand() {
   return cards;
 }

@@ -29,7 +29,7 @@ class JungleSpeed : public Game {
   * @param decks if the number of decks to be used
   * @param p is the vector of players
   */
-  JungleSpeed(const int decks, std::vector <Player*> p);
+  JungleSpeed(const int decks, std::vector <std::shared_ptr<Player>> p);
 
   /**
   * Destructor
@@ -69,7 +69,7 @@ class JungleSpeed : public Game {
   * reaction time.
   * @return a pointer to a player whose reaction time is being determined.
   */
-  Player* declareLoser(std::vector<double> reactionTimes);
+  std::shared_ptr<Player> declareLoser(std::vector<double> reactionTimes);
 
   /**
   * Controls the duel when the same card is flipped by both players.
@@ -81,13 +81,13 @@ class JungleSpeed : public Game {
   * @param userinput an istream used to read the user response.
   * @return a pointer to the player who wins the duel.
   */
-  Player* duel(std::vector<Player*> playersDuel, std::istream& userInput);
+  std::shared_ptr<Player> duel(std::vector<std::shared_ptr<Player>> playersDuel, std::istream& userInput);
 
   /**
   * Runs a human's turn.
   * @param p is a the player who is taking their turn
   */
-  void playerTurn(Player* p, std::istream& userInput);
+  void playerTurn(std::shared_ptr<Player> p, std::istream& userInput);
 
   /**
   * A getter function that returns the size of the flipped card stack.
@@ -99,14 +99,14 @@ class JungleSpeed : public Game {
   * Runs an AI's turn.
   * @param p the player whose turn it is.
   */
-  void AITurn(Player* p);
+  void AITurn(std::shared_ptr<Player> p);
 
   /**
   * Determines if 2 cards match.
   * @param c the card to compare to.
   * @return -1 if the cards do not match and 1 if they match.
   */
-  int isMatch(Card* c);
+  int isMatch(std::shared_ptr<Card> c);
 
   /**
   * The structure of a round calls playerturn and AITurn.
@@ -119,13 +119,13 @@ class JungleSpeed : public Game {
   * @param reactionTime a vector of doubles containing players reaction times.
   * @return a pointer to the player with the best reaction time.
   */
-  Player* declareWinner(std::vector<double> reactionTimes);
+  std::shared_ptr<Player> declareWinner(std::vector<double> reactionTimes);
 
   /**
   * A getter function that returns the size of the stockpile.
   * @return an integer representing the size of the stockpile.
   */
-  int getStockPileSize() {return stockPile.getSize();}
+  int getStockPileSize() {return stockPile->getSize();}
 
   /**
   * Handles the players in a duel.
@@ -133,9 +133,9 @@ class JungleSpeed : public Game {
   * @param pos the position of the player
   * @return a vector of player pointers in the duel.
   */
-  std::vector<Player*> inDuel(Card* c, int pos);
+  std::vector<std::shared_ptr<Player>> inDuel(std::shared_ptr<Card> c, int pos);
 
-  std::vector<Discard*> flippedCards;
+  std::vector<std::shared_ptr<Discard>> flippedCards;
 };
 
 #endif

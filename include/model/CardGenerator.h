@@ -33,7 +33,7 @@ class CardGenerator {
   * @param valueOfCard an integer representing the value of a card.
   * @return A pointer to the StandardCard that was made.
   */
-  StandardCard* makeStandardCard(const int typeOfSuit, const int valueOfCard);
+  std::shared_ptr<StandardCard> makeStandardCard(const int typeOfSuit, const int valueOfCard);
 
 
   /**
@@ -42,7 +42,7 @@ class CardGenerator {
   * @param i an integer representing the colour of a card.
   * @return A pointer to the JungleSpeedCard that was made.
   */
-  JungleSpeedCard* makeJungleSpeedCard(const std::string s, const int i);
+  std::shared_ptr<JungleSpeedCard> makeJungleSpeedCard(const std::string s, const int i);
 };
 
 #endif

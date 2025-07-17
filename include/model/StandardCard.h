@@ -6,6 +6,7 @@
 #ifndef STANDARDCARD_H_INCLUDED
 #define STANDARDCARD_H_INCLUDED
 
+#include <memory>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -61,7 +62,7 @@ class StandardCard : public Card {
   * @return a true if the card objecct has the same rank as c,
   * false otherwise.
   */
-  bool sameRank(const StandardCard& c);
+  bool sameRank(const std::shared_ptr<StandardCard> c);
 
   /**
   * Compares two cards to see if they have the same suit
@@ -69,7 +70,7 @@ class StandardCard : public Card {
   * @return true if the  card object rank has same the same suit as c,
   * false otherwise.
   */
-  bool sameSuit(const StandardCard& c);
+  bool sameSuit(const std::shared_ptr<StandardCard> c);
 
   /**
   * Displays the number/face of the standard card.
@@ -90,7 +91,7 @@ class StandardCard : public Card {
   * @param Card& c this is the card to be compared to.
   * @return true if the card passed in ane the card object are equal.
   */
-  bool operator==(const Card& c);
+  bool operator==(const std::shared_ptr<Card> c);
 
   /**
   * COnverts the rank of a card which is an integer to a name which is a string.

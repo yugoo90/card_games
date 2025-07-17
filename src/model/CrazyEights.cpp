@@ -13,8 +13,7 @@
 #include "AI.h"
 #include "GameActions.h"
 
-
-  CrazyEights::CrazyEights(const int decks, std::vector <Player*> p) :
+CrazyEights::CrazyEights(const int decks, std::vector <std::shared_ptr<Player>> p) :
 Game{decks, p} {
     type = Game::CRAZYEIGHTS;
     HAND_SIZE = 5;
@@ -55,24 +54,27 @@ Game{decks, p} {
 
   void CrazyEights::preGame() {
     Game::preGame();
-    while (dynamic_cast<StandardCard*>(mainDeck-> getTop())->getValue() == 8) {
+    auto topCard = std::dynamic_pointer_cast<StandardCard>(mainDeck->getTop());
+    while (topCard && topCard->getValue() == 8) {
       mainDeck->shuffleCardSet();
+      topCard = std::dynamic_pointer_cast<StandardCard>(mainDeck->getTop());
     }
-    gameSuit = dynamic_cast<StandardCard*>(mainDeck->getTop())->getSuit();
-    transferCards(mainDeck, &stockPile, mainDeck->getTop());
+    //gameSuit = dynamic_cast<StandardCard*>(mainDeck->getTop())->getSuit();
+    gameSuit = std::dynamic_pointer_cast<StandardCard>(mainDeck->getTop())->getSuit();
+    transferCards(mainDeck, stockPile, mainDeck->getTop());
   }
 
-  void CrazyEights::scoringSystem(Player* winner) {
+  void CrazyEights::scoringSystem(std::shared_ptr<Player> winner) {
     int totalPoints = 0;
-    std::vector<Card*> hnd;
-    Player* temp;
+    std::vector<std::shared_ptr<Card>> hnd;
+    std::shared_ptr<Player> temp;
     for (auto it = Players.begin(); it != Players.end(); it++) {
-      hnd = (*it)-> hand.getHand();
+      hnd = (*it)-> hand->getHand();
       for (int i = 0; i < hnd.size(); i++) {
-        if ((dynamic_cast<StandardCard*>(hnd[i])-> getValue() < 11 &&
-        dynamic_cast<StandardCard*>(hnd[i])-> getValue() != 8)) {
-          totalPoints += dynamic_cast<StandardCard*>(hnd[i])-> getValue();
-        } else if (dynamic_cast<StandardCard*>(hnd[i])-> getValue() > 10) {
+        if ((std::dynamic_pointer_cast<StandardCard>(hnd[i])-> getValue() < 11 &&
+       std::dynamic_pointer_cast<StandardCard>(hnd[i])-> getValue() != 8)) {
+          totalPoints += std::dynamic_pointer_cast<StandardCard>(hnd[i])-> getValue();
+        } else if (std::dynamic_pointer_cast<StandardCard>(hnd[i])-> getValue() > 10) {
           totalPoints += 10;
         } else {
           totalPoints += 50;
@@ -82,7 +84,7 @@ Game{decks, p} {
     winner-> setRoundPoints(totalPoints);
   }
 
-  void CrazyEights::playerTurn(Player* p, std::istream& userInput) {
+  void CrazyEights::playerTurn(std::shared_ptr<Player> p, std::istream& userInput) {
     bool legalRequest = false;
     bool playTurn = false;
     std::string response = "";
@@ -94,165 +96,161 @@ Game{decks, p} {
     p->setMyTurn(true);
 
     do {
-  if (!hasValidCard(p)) {
-    std::cout << "You do not have a valid card in your hand, " << p->getName()
-    << "." << std::endl;
-    //usleep(1000000);
-    if (mainDeck->getSize() == 0) {
-      std::cout << "There are no cards left in the deck, skipping your turn."
-      << std::endl << std::endl;
-      //usleep(1000000);
-      p->setMyTurn(false);
-      return;
+      if(!hasValidCard(p)){
+        std::cout << "You do not have a valid card in your hand, " << p->getName()
+        << "." << std::endl;
+        if(mainDeck->getSize() == 0){
+          std::cout << "There are no cards left in the deck, skipping your turn."
+          << std::endl << std::endl;
+          p->setMyTurn(false);
+          return;
         }
-        std::cout << "You picked up a " <<
-        (mainDeck->getTop())->stringOfWholeCard() << "." << std::endl
+        std::cout << "You picked uo a " << 
+        mainDeck->getTop()->stringOfWholeCard() << "." << std::endl
         << std::endl;
-        //usleep(1000000);
-        transferCards(mainDeck, &(p->hand), mainDeck->getTop());
+        transferCards(mainDeck, (p->hand), mainDeck->getTop());
       }
-  } while (!hasValidCard(p));
-  do {
-    p->hand.display();
-    //usleep(2000000);
-    std::cout << "The top card is ";
-    stockPile.display();
-    std::cout << std::endl;
-    if (gameSuit !=
-      (dynamic_cast<StandardCard*>(stockPile.getTop()))->getSuit()) {
-        std::cout << "The game suit has been changed to "
-        << dynamic_cast<StandardCard*>(
-          stockPile.getTop())->suitToString(gameSuit) << "." << std::endl;
-    }
-    std::cout << std::endl;
-    std::cout << "Would you like to play a card, " << p->getName()
-    << "? (y/n): ";
-    userInput >> response;
-    IH.clearStream(userInput);
-
-    if (tolower(response[0]) == '~') {
-    quitGame();
-    return;
-  }
-
-    if (tolower(response[0]) == 'y') {
-    playTurn = true;
+    } while(!hasValidCard(p));
 
     do {
-    std::cout << "\nTo play a card, enter a digit from 2-10, J, Q, K, of A.";
-    std::cout << "\nThen enter the suit of the card as (S)pades, (C)lubs, " <<
-    "(D)iamonds, or (H)earts." << std::endl;
-    std::cout << "For example \"3 H\"" << std::endl;
-    std::cout<< "To quit the game, enter \"~\". To see the rules, enter H.";
-    std::cout << std::endl << std::endl << "What card would you like to play, "
-    << p->getName() << "?: ";
-    userInput >> placeCardRank;
-
-    if (tolower(placeCardRank[0]) == '~') {
-      quitGame();
-      return;
-    }
-
-    if (placeCardRank[0] == 'h') {
+      p->hand->display();
+      //usleep(2000000);
+      std::cout << "The top card is ";
+      stockPile->display();
       std::cout << std::endl;
-      printRules();
-      continue;
-    }
-    userInput >> placeCardSuit;
-    IH.clearStream(userInput);
+      if (gameSuit !=
+        (std::dynamic_pointer_cast<StandardCard>(stockPile->getTop()))->getSuit()) {
+        std::cout << "The game suit has been changed to "
+        << std::dynamic_pointer_cast<StandardCard>(
+        stockPile->getTop())->suitToString(gameSuit) << "." << std::endl;
+      }
+      std::cout << std::endl;
+      std::cout << "Would you like to play a card, " << p->getName()
+      << "? (y/n): ";
+      userInput >> response;
+      IH.clearStream(userInput);
 
-    switch (tolower(placeCardRank[0])) {
-      case '2': cardChoice = 2; break;
-      case '3': cardChoice = 3; break;
-      case '4': cardChoice = 4; break;
-      case '5': cardChoice = 5; break;
-      case '6': cardChoice = 6; break;
-      case '7': cardChoice = 7; break;
-      case '8': cardChoice = 8; break;
-      case '9': cardChoice = 9; break;
-      case '1': cardChoice = 10; break;
-      case 'a': cardChoice = 1; break;
-      case 'j': cardChoice = 11; break;
-      case 'q': cardChoice = 12; break;
-      default: cardChoice = 13; break;
-    }
+      if (tolower(response[0]) == '~') {
+        quitGame();
+        return;
+      }
 
-    switch (tolower(placeCardSuit[0])) {
-      case 's': suitChoice = StandardCard::SPADES; break;
-      case 'c': suitChoice = StandardCard::CLUBS; break;
-      case 'd': suitChoice = StandardCard::DIAMONDS; break;
-      case '~': quitGame(); return; break;
-      default: suitChoice = StandardCard::HEARTS; break;
-    }
+      if (tolower(response[0]) == 'y') {
+        playTurn = true;
 
-    Card* selectedCard = new StandardCard(suitChoice, cardChoice);
-    StandardCard* checker = dynamic_cast<StandardCard*>(
-      p->hand.getCard(selectedCard));
-
-    if (checker == nullptr) {
-      std::cout << "\nSorry " <<p->getName()
-      << ", you don't have this card." <<
-      "\nPlease choose another card." << std::endl << std::endl;
-      continue;
-    }
-
-    StandardCard& topCardCopy = dynamic_cast<StandardCard&>(
-      *(stockPile.getTop()));
-      if (checker->getValue() == 8) {
-        bool validSuit = false;
         do {
-          std::cout << "What suit would you like to change it to? ";
-          userInput >> placeCardSuit;
-          IH.clearStream(userInput);
-          switch (tolower(placeCardSuit[0])) {
-            case 's': suitChoice = StandardCard::SPADES; validSuit = true;
-            break;
-            case 'c': suitChoice = StandardCard::CLUBS; validSuit = true;
-            break;
-            case 'd': suitChoice = StandardCard::DIAMONDS; validSuit = true;
-            break;
-            case 'h': suitChoice = StandardCard::HEARTS; validSuit = true;
-            break;
-            default: break;
+          std::cout << "\nTo play a card, enter a digit from 2-10, J, Q, K, of A.";
+          std::cout << "\nThen enter the suit of the card as (S)pades, (C)lubs, " <<
+          "(D)iamonds, or (H)earts." << std::endl;
+          std::cout << "For example \"3 H\"" << std::endl;
+          std::cout<< "To quit the game, enter \"~\". To see the rules, enter H.";
+          std::cout << std::endl << std::endl << "What card would you like to play, "
+          << p->getName() << "?: ";
+          userInput >> placeCardRank;
+  
+          if (tolower(placeCardRank[0]) == '~') {
+            quitGame();
+            return;
           }
-          if (!validSuit) {
-            std::cout << "\nSorry " <<p->getName()
-            << ", this is not a valid suit." <<
-            "\nPlease choose another suit." << std::endl << std::endl;
+
+          if (placeCardRank[0] == 'h') {
+            std::cout << std::endl;
+            printRules();
             continue;
           }
-        } while (!validSuit);
-        gameSuit = suitChoice;
-        std::cout << "You changed the suit to " <<
-        checker->suitToString(gameSuit) << std::endl << std::endl;
-        //usleep(1000000);
-      } else if ((checker->getSuit() == gameSuit) ||
-      (topCardCopy.sameRank(*checker))) {
-      } else {
-        std::cout << "\nSorry " <<p->getName()
-        << ", this is not a valid card." <<
-        "\nPlease choose another card." << std::endl << std::endl;
-        continue;
-      }
-      std::cout << "You placed a " <<
-      (p->hand.getCard(selectedCard))->stringOfWholeCard() << "."
-      << std::endl << std::endl;
-      //usleep(1000000);
-      transferCards(&(p->hand), &stockPile, (p->hand.getCard(selectedCard)));
-      if (dynamic_cast<StandardCard*>(stockPile.getTop())->getValue() != 8) {
-        gameSuit = dynamic_cast<StandardCard*>(stockPile.getTop())->getSuit();
-      }
-      legalRequest = true;
-    if (p->hand.getSize() == 0) {
-      gameOver = true;
-      std::cout << "You have no more cards in your hand " << p->getName()
-      << "!" <<
-      std::endl << std::endl;
-      //usleep(1000000);
-      scoringSystem(p);
-    }
-    delete selectedCard;
-  } while (!legalRequest);
+          userInput >> placeCardSuit;
+          IH.clearStream(userInput);
+
+          switch (tolower(placeCardRank[0])) {
+            case '2': cardChoice = 2; break;
+            case '3': cardChoice = 3; break;
+            case '4': cardChoice = 4; break;
+            case '5': cardChoice = 5; break;
+            case '6': cardChoice = 6; break;
+            case '7': cardChoice = 7; break;
+            case '8': cardChoice = 8; break;
+            case '9': cardChoice = 9; break;
+            case '1': cardChoice = 10; break;
+            case 'a': cardChoice = 1; break;
+            case 'j': cardChoice = 11; break;
+            case 'q': cardChoice = 12; break;
+            default: cardChoice = 13; break;
+          }
+
+          switch (tolower(placeCardSuit[0])) {
+            case 's': suitChoice = StandardCard::SPADES; break;
+            case 'c': suitChoice = StandardCard::CLUBS; break;
+            case 'd': suitChoice = StandardCard::DIAMONDS; break;
+            case '~': quitGame(); return; break;
+            default: suitChoice = StandardCard::HEARTS; break;
+          }
+
+          std::shared_ptr<Card> selectedCard = std::make_shared<StandardCard>(suitChoice, cardChoice);
+          std::shared_ptr<StandardCard> checker = std::dynamic_pointer_cast<StandardCard>(p->hand->getCard(selectedCard));
+
+          if (checker == nullptr) {
+            std::cout << "\nSorry " <<p->getName()
+            << ", you don't have this card." <<
+            "\nPlease choose another card." << std::endl << std::endl;
+            continue;
+          }
+          
+          std::shared_ptr<StandardCard> topCardCopy = std::dynamic_pointer_cast<StandardCard>(stockPile->getTop());
+          if (checker->getValue() == 8) {
+            bool validSuit = false;
+            do {
+              std::cout << "What suit would you like to change it to? ";
+              userInput >> placeCardSuit;
+              IH.clearStream(userInput);
+              switch (tolower(placeCardSuit[0])) {
+                case 's': suitChoice = StandardCard::SPADES; validSuit = true;
+                break;
+                case 'c': suitChoice = StandardCard::CLUBS; validSuit = true;
+                break;
+                case 'd': suitChoice = StandardCard::DIAMONDS; validSuit = true;
+                break;
+                case 'h': suitChoice = StandardCard::HEARTS; validSuit = true;
+                break;
+                default: break;
+              }
+
+              if (!validSuit) {
+                std::cout << "\nSorry " <<p->getName()
+                << ", this is not a valid suit." <<
+                "\nPlease choose another suit." << std::endl << std::endl;
+                continue;
+              }
+            } while (!validSuit);
+            gameSuit = suitChoice;
+            std::cout << "You changed the suit to " <<
+            checker->suitToString(gameSuit) << std::endl << std::endl;
+            //usleep(1000000);
+            } else if ((checker->getSuit() == gameSuit) ||
+                (topCardCopy->sameRank(checker))) {
+            } else {
+                std::cout << "\nSorry " <<p->getName()
+                << ", this is not a valid card." <<
+                "\nPlease choose another card." << std::endl << std::endl;
+                continue;
+            }
+            std::cout << "You placed a " <<
+            (p->hand->getCard(selectedCard))->stringOfWholeCard() << "."
+            << std::endl << std::endl;
+            //usleep(1000000);
+            transferCards((p->hand), stockPile, (p->hand->getCard(selectedCard)));
+            if (std::dynamic_pointer_cast<StandardCard>(stockPile->getTop())->getValue() != 8) {
+              gameSuit = std::dynamic_pointer_cast<StandardCard>(stockPile->getTop())->getSuit();
+            }
+            legalRequest = true;
+            if (p->hand->getSize() == 0) {
+              gameOver = true;
+              std::cout << "You have no more cards in your hand " << p->getName()
+              << "!" <<
+              std::endl << std::endl;
+              //usleep(1000000);
+              scoringSystem(p);
+            }
+          } while (!legalRequest);
 } else {
   //usleep(1000000);
   if (mainDeck->getSize() > 0) {
@@ -260,7 +258,7 @@ Game{decks, p} {
   mainDeck->getTop()->displayCard();
   std::cout << std::endl;
   //usleep(1000000);
-  transferCards(mainDeck, &(p->hand), mainDeck->getTop());
+  transferCards(mainDeck, (p->hand), mainDeck->getTop());
 } else {
   std::cout << "There are no cards left in the deck, skipping your turn."
   << std::endl << std::endl;
@@ -273,29 +271,28 @@ Game{decks, p} {
 p->setMyTurn(false);
 }
 
-void CrazyEights::AITurn(Player* p) {
-  CrazyEightsAI* castedAI = dynamic_cast<CrazyEightsAI*>(p);
-  std::vector<Card*> tempHand;
+void CrazyEights::AITurn(std::shared_ptr<Player> p) {
+  std::shared_ptr<CrazyEightsAI> castedAI = std::dynamic_pointer_cast<CrazyEightsAI>(p);
+  std::vector<std::shared_ptr<Card>> tempHand;
   bool placedCard = false;
-  Card* temp;
+  std::shared_ptr<Card> temp;
   p->setMyTurn(true);
 
   do {
-    Card* topCard = new StandardCard(gameSuit,
-      dynamic_cast<StandardCard*>(stockPile.getTop())->getValue());
+    std::shared_ptr<Card> topCard = std::make_shared<StandardCard>(gameSuit,
+      std::dynamic_pointer_cast<StandardCard>(stockPile->getTop())->getValue());
     temp = castedAI->strategy(topCard);
-    delete topCard;
   if (temp != nullptr) {
-    if (dynamic_cast<StandardCard*>(temp)->getValue() == 8) {
-      tempHand = (p->hand).getHand();
+    if (std::dynamic_pointer_cast<StandardCard>(temp)->getValue() == 8) {
+      tempHand = (p->hand)->getHand();
       switch (castedAI->getDifficultyLevel()) {
         case AI::EASY :
-        gameSuit = dynamic_cast<StandardCard*>(temp)->getSuit(); break;
+        gameSuit = std::dynamic_pointer_cast<StandardCard>(temp)->getSuit(); break;
         case AI::NORMAL :
-        gameSuit = dynamic_cast<StandardCard*>(tempHand[0])->getSuit(); break;
+        gameSuit = std::dynamic_pointer_cast<StandardCard>(tempHand[0])->getSuit(); break;
         default:
         GameActions ga;
-        std::vector<Card*> hnd = (p->hand).getHand();
+        std::vector<std::shared_ptr<Card>> hnd = (p->hand)->getHand();
         gameSuit = ga.mostPrevalentSuit(hnd);
         break;
       }
@@ -304,18 +301,18 @@ void CrazyEights::AITurn(Player* p) {
     temp->displayCard();
     std::cout << " on the stockPile." << std::endl << std::endl;
     //usleep(1000000);
-    if (dynamic_cast<StandardCard*>(temp)->getValue() == 8) {
+    if (std::dynamic_pointer_cast<StandardCard>(temp)->getValue() == 8) {
       std::cout << p->getName() << " changed the suit to "
-      << dynamic_cast<StandardCard*>(temp)->suitToString(gameSuit) << "."
+      << std::dynamic_pointer_cast<StandardCard>(temp)->suitToString(gameSuit) << "."
       << std::endl << std::endl;
       //usleep(1000000);
     }
     placedCard = true;
-    transferCards(&(p->hand), &stockPile, temp);
-    if (dynamic_cast<StandardCard*>(stockPile.getTop())->getValue() != 8) {
-      gameSuit = dynamic_cast<StandardCard*>(stockPile.getTop())->getSuit();
+    transferCards((p->hand), stockPile, temp);
+    if (std::dynamic_pointer_cast<StandardCard>(stockPile->getTop())->getValue() != 8) {
+      gameSuit = std::dynamic_pointer_cast<StandardCard>(stockPile->getTop())->getSuit();
     }
-    if (p->hand.getSize() == 0) {
+    if (p->hand->getSize() == 0) {
       std::cout << p->getName() << " has no more cards in their hand!" <<
       std::endl << std::endl;
       gameOver = true;
@@ -345,22 +342,24 @@ void CrazyEights::AITurn(Player* p) {
     }
     std::cout << p->getName() << " picked up a card." << std::endl;
     //usleep(1000000);
-    transferCards(mainDeck, &(p->hand), mainDeck->getTop());
+    transferCards(mainDeck, (p->hand), mainDeck->getTop());
   }
 } while (!placedCard);
 p->setMyTurn(false);
 }
 
-bool CrazyEights::hasValidCard(Player* p) {
-  const StandardCard& topCard = dynamic_cast<const StandardCard&>(
-    *(stockPile.getTop()));
-    std::vector<Card*> temp = p->hand.getHand();
+bool CrazyEights::hasValidCard(std::shared_ptr<Player> p) {
+  const std::shared_ptr<StandardCard> topCard = std::dynamic_pointer_cast<StandardCard>(
+    (stockPile->getTop()));
+    std::vector<std::shared_ptr<Card>> temp = p->hand->getHand();
     for (auto itr = temp.begin(); itr != temp.end(); itr++) {
-      StandardCard& tempHandCard = dynamic_cast<StandardCard&>(*(*itr));
-      if ((tempHandCard.getSuit() == gameSuit) || tempHandCard.sameRank(topCard)
-      || (tempHandCard.getValue() == 8)) {
+      std::shared_ptr<StandardCard> tempHandCard = std::dynamic_pointer_cast<StandardCard>((*itr));
+      if ((tempHandCard->getSuit() == gameSuit) || tempHandCard->sameRank(topCard)
+      || (tempHandCard->getValue() == 8)) {
         return true;
       }
     }
     return false;
-  }
+}
+
+

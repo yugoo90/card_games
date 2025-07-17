@@ -39,7 +39,7 @@ class GameActions {
   * @param cardRank the rank of the card being asked for.
   * @return returns a vector of pointers to all the cards the receiver gets.
   */
-  std::vector<Card*> makeRequest(Player* receiver, const int cardRank);
+  std::vector<std::shared_ptr<Card>> makeRequest(std::shared_ptr<Player> receiver, const int cardRank);
 
   /**
   * Finds the most prevalent suit in a hand.
@@ -47,7 +47,7 @@ class GameActions {
   * @param hand is the hand we will be searching through.
   * @return Suit of the most prevalent suit in the players hand.
   */
-  StandardCard::Suit mostPrevalentSuit(std::vector<Card*> hand);
+  StandardCard::Suit mostPrevalentSuit(std::vector<std::shared_ptr<Card>> hand);
 };
 
 #endif

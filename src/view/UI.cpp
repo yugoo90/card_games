@@ -29,10 +29,10 @@ Game::GameType UI::chooseGame(std::istream& userInput) {
     return Game::CRAZYEIGHTS;
   } else {
     std::cout << "You chose Jungle Speed." << std::endl;
-    std::vector<Player*> P;
-    Player* H1 = new Human("H1", 0);
+    std::vector<std::shared_ptr<Player>> P;
+    std::shared_ptr<Player> H1 = std::make_shared<Human>("H1", 0);
     P.push_back(H1);
-    Player* A1 =  new JungleSpeedAI(AI::EASY, 1);
+    std::shared_ptr<Player> A1 =  std::make_shared<JungleSpeedAI>(AI::EASY, 1);
     P.push_back(A1);
     JungleSpeed J(1, P);
     J.printRules();
@@ -85,48 +85,48 @@ const int UI::getNumDecks(std::istream& userInput) {
   return i;
 }
 
-Game* UI::createGame(std::istream& userInput) {
+std::shared_ptr<Game> UI::createGame(std::istream& userInput) {
   Game::GameType gameChoice = chooseGame(userInput);
-  std::vector<Player*> v = createPlayers(gameChoice, userInput);
+  std::vector<std::shared_ptr<Player>> v = createPlayers(gameChoice, userInput);
   const int numDecks = getNumDecks(userInput);
-  Game* g;
+  std::shared_ptr<Game> g;
   switch (gameChoice) {
   case Game::GOFISH: {
-    g = new GoFish(numDecks, v);
+    g = std::make_shared<GoFish>(numDecks, v);
     break;
   }
   case Game::CRAZYEIGHTS: {
-    g = new CrazyEights(numDecks, v);
+    g = std::make_shared<CrazyEights>(numDecks, v);
     break;
   }
-  default: g = new JungleSpeed(numDecks, v);
+  default: g = std::make_shared<JungleSpeed>(numDecks, v);
   }
   return g;
 }
 
-Player* UI::createHuman(std::string s) {
-  return new Human(s, 0);
+std::shared_ptr<Player> UI::createHuman(std::string s) {
+  return std::make_shared<Human>(s, 0);
 }
 
-Player* UI::generateAI(Game::GameType t, AI::Level l, int id) {
+std::shared_ptr<Player> UI::generateAI(Game::GameType t, AI::Level l, int id) {
     switch (t) {
     case Game::GOFISH: {
-      return new GoFishAI(l, id);
+      return std::make_shared<GoFishAI>(l, id);
       break;
     }
     case Game::CRAZYEIGHTS: {
-      return new CrazyEightsAI(l, id);
+      return std::make_shared<CrazyEightsAI>(l, id);
       break;
     }
-    default: return new JungleSpeedAI(l, id);
+    default: return std::make_shared<JungleSpeedAI>(l, id);
   }
 }
 
-std::vector<Player*> UI::createPlayers(Game::GameType gameChoice,
+std::vector<std::shared_ptr<Player>> UI::createPlayers(Game::GameType gameChoice,
   std::istream& userInput) {
   std::string name = "";
   std::string aiChoice = "";
-  std::vector<Player*> temp;
+  std::vector<std::shared_ptr<Player>> temp;
   AI::Level aiLevel;
   bool easyChosen = false;
   bool normalChosen = false;

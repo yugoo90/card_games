@@ -29,7 +29,7 @@ class CrazyEights : public Game {
   * @param decks an integer representing the number of decks.
   * @param p a container for all the players in the game.
   */
-  CrazyEights(const int decks, std::vector <Player*> p);
+  CrazyEights(const int decks, std::vector<std::shared_ptr<Player>> p);
 
   /**
   * Destructor.
@@ -50,26 +50,27 @@ class CrazyEights : public Game {
   * Called at the end of each round.
   * @param winner the player who won the round.
   */
-  void scoringSystem(Player* winner);
+  void scoringSystem(std::shared_ptr<Player> winner);
 
   /**
   * Defines the turn of a human player.
   * @param p the player whose turn is being defined.
   * @param userInput the iStream for the player.
   */
-  void playerTurn(Player* p, std::istream& userInput);
+  void playerTurn(std::shared_ptr<Player> p, std::istream& userInput);
 
   /**
   * Defines the turn of an AI player.
   * @param p the player whose turn is being defined.
   */
-  void AITurn(Player* p);
+  void AITurn(std::shared_ptr<Player> p);
 
   /**
   * Determines if a player has a playable card in their hand.
   * @param p the player who's hand is being searched.
   */
-  bool hasValidCard(Player* p);
+  bool hasValidCard(std::shared_ptr<Player> p);
+
 };
 
 #endif

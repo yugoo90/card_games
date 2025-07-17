@@ -6,6 +6,7 @@
 #ifndef GAME_H_INCLUDED
 #define GAME_H_INCLUDED
 
+#include <memory>
 #include <string>
 #include <iostream>
 #include <vector>
@@ -32,7 +33,7 @@ class Game {
   * @param players the number of players.
   * @param decks the number of decks to be used.
   */
-  Game(const int decks, std::vector <Player*> p);
+  Game(const int decks, std::vector<std::shared_ptr<Player>> p);
 
   /**
   * Destructor.
@@ -99,7 +100,7 @@ class Game {
   * Getter function that returns all the players in the game.
   * @return a vector container with pointers to all the players in it.
   */
-  std::vector<Player*> getPlayers() const;
+  std::vector<std::shared_ptr<Player>> getPlayers() const;
 
   /**
   * In charge of picking up cards, giving cards away, putting down cards.
@@ -108,8 +109,8 @@ class Game {
   * @param detination the final destination of the card.
   * @param c the card to be transfered.
   */
-  void transferCards(CardSet* location, CardSet* destination,
-  const Card* c);
+  void transferCards(std::shared_ptr<CardSet> location, 
+    std::shared_ptr<CardSet> destination, const std::shared_ptr<Card> c);
 
   /**
   * The structure of a game.
@@ -122,13 +123,13 @@ class Game {
   * @param p the player whose turn is being defined.
   * @param userInput handles the human player's inputs.
   */
-  virtual void playerTurn(Player* p, std::istream& userInput) = 0;
+  virtual void playerTurn(std::shared_ptr<Player> p, std::istream& userInput) = 0;
 
   /**
   * Defines the turn of an AI player.
   * @param p the player whose turn is being defined.
   */
-  virtual void AITurn(Player* p) = 0;
+  virtual void AITurn(std::shared_ptr<Player> p) = 0;
 
   /**
   * Defines the end of a game.
@@ -146,9 +147,9 @@ class Game {
   int numDecks;
   GameType type;
   int HAND_SIZE;
-  std::vector<Player*> Players;
-  Deck* mainDeck = nullptr;
-  Discard stockPile;
+  std::vector<std::shared_ptr<Player>> Players;
+  std::shared_ptr<Deck> mainDeck = nullptr;
+  std::shared_ptr<Discard> stockPile;
 };
 
 #endif

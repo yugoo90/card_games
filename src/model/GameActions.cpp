@@ -18,17 +18,17 @@ GameActions::GameActions() {}
 
 GameActions::~GameActions() {}
 
-std::vector<Card*> GameActions::makeRequest(Player* receiver,
+std::vector<std::shared_ptr<Card>> GameActions::makeRequest(std::shared_ptr<Player> receiver,
   const int cardRank) {
-  std::vector<Card*> v1;
-  std::vector<Card*> v2;
-  StandardCard* temp2;
-  v1 = receiver->hand.getHand();
+  std::vector<std::shared_ptr<Card>> v1;
+  std::vector<std::shared_ptr<Card>> v2;
+  std::shared_ptr<StandardCard> temp2;
+  v1 = receiver->hand->getHand();
   if (!receiver-> isInHand(cardRank)) {
     return v2;
   } else {
     for (auto it = v1.begin(); it != v1.end(); it++) {
-      temp2 = dynamic_cast<StandardCard*>(*it);
+      temp2 = std::dynamic_pointer_cast<StandardCard>(*it);
       if (temp2->getValue() == cardRank) {
         v2.push_back(*it);
       }
@@ -37,11 +37,11 @@ std::vector<Card*> GameActions::makeRequest(Player* receiver,
   }
 }
 
-StandardCard::Suit GameActions::mostPrevalentSuit(std::vector<Card*> hand) {
+StandardCard::Suit GameActions::mostPrevalentSuit(std::vector<std::shared_ptr<Card>> hand) {
   std::vector<int> cardFrequency = {0, 0, 0, 0};
   StandardCard::Suit s;
   for (int i = 0; i < hand.size(); i++) {
-    s = dynamic_cast<StandardCard*>(hand[i])->getSuit();
+    s = std::dynamic_pointer_cast<StandardCard>(hand[i])->getSuit();
     switch (s) {
       case StandardCard::DIAMONDS: {
         cardFrequency[0]++;

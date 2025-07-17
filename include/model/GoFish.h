@@ -7,6 +7,7 @@
 #define GOFISH_H_INCLUDED
 
 #include <iostream>
+#include<memory>
 #include <string>
 #include <vector>
 #include <cctype>
@@ -27,7 +28,7 @@ class GoFish : public Game {
   /**
   * Default constructor
   */
-  GoFish(const int decks, std::vector<Player*> p);
+  GoFish(const int decks, std::vector<std::shared_ptr<Player>> p);
 
   /**
   * Destructor
@@ -62,13 +63,13 @@ class GoFish : public Game {
   * @param p player whose turn is being defined.
   * @param userInput takes the response of the player.
   */
-  void playerTurn(Player* p, std::istream& userInput);
+  void playerTurn(std::shared_ptr<Player> p, std::istream& userInput);
 
   /**
   * Defines the turn of an AI player.
   * @param p thr player whose turn it is.
   */
-  void AITurn(Player* p);
+  void AITurn(std::shared_ptr<Player> p);
 
   /**
   * checks to see if a players turn should end or keep going.
@@ -76,15 +77,15 @@ class GoFish : public Game {
   * @param requestee the player of whom a card is being requested.
   * @param v a container with a pointer to the cards.
   */
-  void requestHandler(Player* requester, Player* requestee,
-    std::vector<Card*> v);
+  void requestHandler(std::shared_ptr<Player> requester, 
+    std::shared_ptr<Player> requestee, std::vector<std::shared_ptr<Card>> v);
 
   /**
   * Checks to see if a player has 4 cards of equal rank.
   * @param p the player whose hand is being checked for a book.
   * @ return returns 4 if a player has a book, 0 otherwise.
   */
-  int hasBook(Player* p);
+  int hasBook(std::shared_ptr<Player> p);
 
   /**
   * The container of the previously asked cards and the player who asked.

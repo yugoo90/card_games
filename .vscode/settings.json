@@ -58,6 +58,16 @@
         "xmemory": "cpp",
         "xstring": "cpp",
         "xtr1common": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "condition_variable": "cpp",
+        "cstdarg": "cpp",
+        "functional": "cpp",
+        "list": "cpp",
+        "mutex": "cpp",
+        "random": "cpp",
+        "shared_mutex": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "xhash": "cpp"
     }
 }

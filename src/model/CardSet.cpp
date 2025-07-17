@@ -12,11 +12,7 @@ CardSet::CardSet() {
   seed = time(NULL);
 }
 
-CardSet::~CardSet() {
-  for (auto c : cards) {
-    delete c;
-  }
-}
+CardSet::~CardSet() {}
 
 int CardSet::getSize() const {
   return cards.size();
@@ -26,30 +22,30 @@ CardSet::CardSetType CardSet::getType() const {
   return type;
 }
 
-void CardSet::addCard(Card* c) {
+void CardSet::addCard(std::shared_ptr<Card> c) {
   cards.push_back(c);
 }
 
-Card* CardSet::getCard(const Card* c) {
+std::shared_ptr<Card> CardSet::getCard(const std::shared_ptr<Card> c) {
   for (auto it = cards.begin(); it != cards.end(); it++) {
-    if (*(*it) == *c) {
+    if ((*it) == c) {
       return *it;
     }
   }
   return nullptr;
 }
 
-void CardSet::removeCard(const Card* c) {
+void CardSet::removeCard(const std::shared_ptr<Card> c) {
   for (auto it = cards.begin(); it != cards.end(); it++) {
-    if (*(*it) == *c) {
+    if ((*it) == c) {
       cards.erase(it);
       return;
     }
   }
 }
 
-Card* CardSet::getTop() {
-  Card* c = cards[cards.size()-1];
+std::shared_ptr<Card> CardSet::getTop() {
+  std::shared_ptr<Card> c = cards[cards.size()-1];
   return c;
 }
 

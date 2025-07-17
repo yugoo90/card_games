@@ -17,7 +17,7 @@
 #include "JungleSpeedCard.h"
 
 
-  JungleSpeed::JungleSpeed(const int decks, std::vector <Player*> p) :
+  JungleSpeed::JungleSpeed(const int decks, std::vector <std::shared_ptr<Player>> p) :
   Game{decks, p} {
     type = Game::JUNGLESPEED;
     DeckGenerator d;
@@ -29,16 +29,12 @@
     HAND_SIZE = (numDecks * mainDeck-> getSize()) / numPlayers;
 
     for (auto it = Players.begin(); it != Players.end(); it++) {
-      flippedCards.push_back(new Discard());
+      flippedCards.push_back(std::make_shared<Discard>());
     }
     std::cout << std::endl << std::endl;
   }
 
-  JungleSpeed::~JungleSpeed() {
-    for (auto c : flippedCards) {
-      delete c;
-    }
-  }
+  JungleSpeed::~JungleSpeed() {}
 
   void JungleSpeed::round(std::istream& userInput) {
     while (!gameOver) {
@@ -83,7 +79,7 @@
     for (auto it = Players.begin(); it != Players.end(); it++) {
       int stockPileSize = flippedCards[(*it)->getID()]->getSize();
       for (int i = 0; i < stockPileSize; i++) {
-        transferCards(flippedCards[(*it)->getID()], &stockPile,
+        transferCards(flippedCards[(*it)->getID()], stockPile,
         flippedCards[(*it)->getID()]->getTop());
       }
     }
@@ -127,7 +123,7 @@
     Game::preGame();
     const int remainingCards = mainDeck->getSize();
     for (int i = 0; i < remainingCards; i++) {
-      transferCards(mainDeck, &stockPile, mainDeck->getTop());
+      transferCards(mainDeck, stockPile, mainDeck->getTop());
     }
   }
 
@@ -151,12 +147,12 @@
     return seconds;
   }
 
-  Player* JungleSpeed::declareLoser(std::vector<double> reactionTimes) {
+ std::shared_ptr<Player> JungleSpeed::declareLoser(std::vector<double> reactionTimes) {
     std::vector<double>::iterator itr = reactionTimes.begin();
     double maxTime = *std::max_element(itr, (itr + reactionTimes.size()));
 
     for (auto it = (Players.begin()+1); it != Players.end(); it++) {
-      if ((dynamic_cast<JungleSpeedAI*>(*it)->getResponseTime()) == maxTime) {
+      if ((std::dynamic_pointer_cast<JungleSpeedAI>(*it)->getResponseTime()) == maxTime) {
         std::cout << (*it)->getName() << " lost the duel!!" << std::endl;
         return (*it);
       }
@@ -165,12 +161,12 @@
     return Players[0];
   }
 
-  Player* JungleSpeed::declareWinner(std::vector<double> reactionTimes) {
+  std::shared_ptr<Player> JungleSpeed::declareWinner(std::vector<double> reactionTimes) {
     std::vector<double>::iterator itr = reactionTimes.begin();
     double maxTime = *std::min_element(itr, (itr + reactionTimes.size()));
 
     for (auto it = (Players.begin()+1); it != Players.end(); it++) {
-      if ((dynamic_cast<JungleSpeedAI*>(*it)->getResponseTime()) == maxTime) {
+      if ((std::dynamic_pointer_cast<JungleSpeedAI>(*it)->getResponseTime()) == maxTime) {
         std::cout << (*it)->getName() << " won the duel!!" << std::endl;
         return (*it);
       }
@@ -179,14 +175,14 @@
     return Players[0];
   }
 
-Player* JungleSpeed::duel(std::vector<Player*> playersDuel,
+std::shared_ptr<Player> JungleSpeed::duel(std::vector<std::shared_ptr<Player>> playersDuel,
     std::istream& userInput) {
       bool allInCardHasBeenPlayed = false;
       int allInID = -1;
 
     for (auto it = playersDuel.begin(); it != playersDuel.end(); it++) {
       if ((*it)->getMyTurn()) {
-        JungleSpeedCard* temp1 = dynamic_cast<JungleSpeedCard*>(
+        std::shared_ptr<JungleSpeedCard> temp1 = std::dynamic_pointer_cast<JungleSpeedCard>(
           flippedCards[(*it)->getID()]->getTop());
           if (((temp1->getName() == "AllIn1")
           || (temp1->getName() == "AllIn2")
@@ -201,7 +197,7 @@ Player* JungleSpeed::duel(std::vector<Player*> playersDuel,
     for (auto it = playersDuel.begin(); it != playersDuel.end(); it++) {
       int stockPileSize = flippedCards[(*it)->getID()]->getSize();
       for (int i = 0; i < stockPileSize; i++) {
-        transferCards(flippedCards[(*it)->getID()], &stockPile,
+        transferCards(flippedCards[(*it)->getID()], stockPile,
         flippedCards[(*it)->getID()]->getTop());
       }
     }
@@ -214,32 +210,32 @@ Player* JungleSpeed::duel(std::vector<Player*> playersDuel,
         playersReactionTimes.push_back(d);
       } else {
         playersReactionTimes.push_back(
-          dynamic_cast<JungleSpeedAI*>(playersDuel[i])->getResponseTime());
+          std::dynamic_pointer_cast<JungleSpeedAI>(playersDuel[i])->getResponseTime());
       }
     }
 
-    Player* loser = nullptr;
-    Player* winner = nullptr;
+    std::shared_ptr<Player> loser = nullptr;
+    std::shared_ptr<Player> winner = nullptr;
     if (!allInCardHasBeenPlayed) {
       loser = declareLoser(playersReactionTimes);
     } else {
       winner = declareWinner(playersReactionTimes);
       const int pileSize = flippedCards[winner->getID()]->getSize();
       for (int i = 0; i < pileSize; i++) {
-        transferCards(flippedCards[winner->getID()], &stockPile,
+        transferCards(flippedCards[winner->getID()], stockPile,
         flippedCards[winner->getID()]->getTop());
       }
-      stockPile.shuffleCardSet();
+      stockPile->shuffleCardSet();
       return winner;
     }
 
-    stockPile.shuffleCardSet();
-    const int pileSize = stockPile.getSize();
+    stockPile->shuffleCardSet();
+    const int pileSize = stockPile->getSize();
     for (int i = 0; i < pileSize; i++) {
-      transferCards(&stockPile, &(loser->hand), stockPile.getTop());
+      transferCards(stockPile, (loser->hand), stockPile->getTop());
     }
     for (auto it = Players.begin(); it != Players.end(); it++) {
-      if ((((*it)->hand).getSize() == 0) &&
+      if ((((*it)->hand)->getSize() == 0) &&
       (flippedCards[(*it)->getID()]->getSize() == 0)) {
         gameOver = true;
         (*it)->setRoundPoints(1);
@@ -258,11 +254,11 @@ Player* JungleSpeed::duel(std::vector<Player*> playersDuel,
     return loser;
   }
 
-  void JungleSpeed::playerTurn(Player* p, std::istream& userInput) {
-    std::vector<Player*> returnedPlayers;
+  void JungleSpeed::playerTurn(std::shared_ptr<Player> p, std::istream& userInput) {
+    std::vector<std::shared_ptr<Player>> returnedPlayers;
 
-    if (numPlayers == 2 && Players[0]->hand.getSize() == 0
-    && Players[1]->hand.getSize() == 0) {
+    if (numPlayers == 2 && Players[0]->hand->getSize() == 0
+    && Players[1]->hand->getSize() == 0) {
       gameOver = true;
       std::cout << std::endl << "It's a draw between you and AI 1" << std::endl
       << std::endl;
@@ -274,7 +270,7 @@ Player* JungleSpeed::duel(std::vector<Player*> playersDuel,
     }
 
     do {
-    if (p->hand.getSize() == 0) {
+    if (p->hand->getSize() == 0) {
       std::cout << ((p->getID() == 0)? "Your" : p->getName());
       std::cout << " top card is: ";
       flippedCards[p->getID()]->display();
@@ -287,15 +283,15 @@ Player* JungleSpeed::duel(std::vector<Player*> playersDuel,
     }
     std::cout <<((p->getID() == 0)? "You" : p->getName());
     std::cout << " flipped a ";
-    p->hand.getTop()->displayCard();
+    p->hand->getTop()->displayCard();
     std::cout << std::endl;
     //usleep(2000000);
     std::this_thread::sleep_for(std::chrono::seconds(2000000));
-    transferCards(&(p->hand), flippedCards[p->getID()], p-> hand.getTop());
-    JungleSpeedCard* temp1 = dynamic_cast<JungleSpeedCard*>
+    transferCards((p->hand), flippedCards[p->getID()], p-> hand->getTop());
+    std::shared_ptr<JungleSpeedCard> temp1 = std::dynamic_pointer_cast<JungleSpeedCard>
     (flippedCards[p->getID()]-> getTop());
 
-    if (((p->hand).getSize() == 0) && (temp1->getColour() == 5)) {
+    if (((p->hand)->getSize() == 0) && (temp1->getColour() == 5)) {
       gameOver = true;
       if (p->getID() == 0) {
         std::cout << "You have no cards in your hand!" << std::endl
@@ -312,10 +308,10 @@ Player* JungleSpeed::duel(std::vector<Player*> playersDuel,
 
     int matchCheck = isMatch(flippedCards[p->getID()]->getTop());
     if (matchCheck != -1) {
-      std::vector<Player*> matchedPlayers = inDuel((
+      std::vector<std::shared_ptr<Player>> matchedPlayers = inDuel((
         flippedCards[p->getID()])->getTop(), matchCheck);
 
-      Player* loser = duel(matchedPlayers, userInput);
+      std::shared_ptr<Player> loser = duel(matchedPlayers, userInput);
       if (loser->getID() == p->getID()) {
         continue;
       } else {
@@ -335,7 +331,7 @@ Player* JungleSpeed::duel(std::vector<Player*> playersDuel,
     }
     if ((temp1->getName() == "AllIn1") || (temp1->getName() == "AllIn2") ||
     (temp1->getName() == "AllIn3")) {
-      Player* winner = duel(Players, userInput);
+      std::shared_ptr<Player> winner = duel(Players, userInput);
       if (winner->getID() == p->getID()) {
         continue;
       } else {
@@ -346,16 +342,16 @@ Player* JungleSpeed::duel(std::vector<Player*> playersDuel,
   } while (p->getMyTurn() && !gameOver);
 }
 
-  void JungleSpeed::AITurn(Player* p) {
+  void JungleSpeed::AITurn(std::shared_ptr<Player> p) {
     playerTurn(p, std::cin);
   }
 
-  int JungleSpeed::isMatch(Card* c) {
-    const JungleSpeedCard& temp = dynamic_cast<const JungleSpeedCard&>(*c);
-    JungleSpeedCard* topCard;
+  int JungleSpeed::isMatch(std::shared_ptr<Card> c) {
+    const std::shared_ptr<JungleSpeedCard> temp = std::dynamic_pointer_cast<JungleSpeedCard>(c);
+    std::shared_ptr<JungleSpeedCard> topCard;
     for (int i = 0; i < flippedCards.size(); i++) {
       if (flippedCards[i]->getSize() > 0) {
-    topCard = dynamic_cast<JungleSpeedCard*>(flippedCards[i]->getTop());
+    topCard = std::dynamic_pointer_cast<JungleSpeedCard>(flippedCards[i]->getTop());
     if ((topCard->getName() == "Colors1")
     || (topCard->getName() == "Colors2")) {
       nameCriteria = false;
@@ -366,10 +362,10 @@ Player* JungleSpeed::duel(std::vector<Player*> playersDuel,
   }
   }
 
-    JungleSpeedCard* j;
+    std::shared_ptr<JungleSpeedCard> j;
     for (int i = 0; i < flippedCards.size(); i++) {
       if (flippedCards[i]->getSize() > 0) {
-      j = dynamic_cast<JungleSpeedCard*>(flippedCards[i]->getTop());
+      j = std::dynamic_pointer_cast<JungleSpeedCard>(flippedCards[i]->getTop());
       if (nameCriteria) {
         if ((j->sameName(temp)) && !(j->sameColour(temp))) {
             return i;
@@ -385,22 +381,22 @@ Player* JungleSpeed::duel(std::vector<Player*> playersDuel,
     return -1;
   }
 
-  std::vector<Player*> JungleSpeed::inDuel(Card* c, int pos) {
-    std::vector<Player*> returnedPlayers;
-    JungleSpeedCard* temp1 = dynamic_cast<JungleSpeedCard*>(c);
+  std::vector<std::shared_ptr<Player>> JungleSpeed::inDuel(std::shared_ptr<Card> c, int pos) {
+    std::vector<std::shared_ptr<Player>> returnedPlayers;
+    std::shared_ptr<JungleSpeedCard> temp1 = std::dynamic_pointer_cast<JungleSpeedCard>(c);
 
     if ((temp1->getName() == "AllOut1") ||
     (temp1->getName() == "AllOut2") ||
     (temp1->getName() == "AllOut3")) {
       for (auto it = Players.begin(); it !=Players.end(); it++) {
-        if (((*it)->hand).getSize() > 0) {
+        if (((*it)->hand)->getSize() > 0) {
         std::cout <<(((*it)->getID() == 0)? "You" : (*it)->getName());
         std::cout << " flipped a ";
-        (*it)->hand.getTop()->displayCard();
+        (*it)->hand->getTop()->displayCard();
         std::cout << std::endl;
         //usleep(1000000);
-        transferCards(&((*it)->hand), flippedCards[(*it)->getID()],
-        (*it)->hand.getTop());
+        transferCards(((*it)->hand), flippedCards[(*it)->getID()],
+        (*it)->hand->getTop());
       }
       }
       for (auto it = Players.begin(); it !=Players.end(); it++) {

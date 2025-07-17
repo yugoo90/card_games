@@ -6,7 +6,8 @@
 
 CardGenerator::CardGenerator() {}
 CardGenerator::~CardGenerator() {}
-StandardCard* CardGenerator::makeStandardCard(
+
+std::shared_ptr<StandardCard> CardGenerator::makeStandardCard(
   const int typeOfSuit, const int valueOfCard) {
       StandardCard::Suit suit;
       switch (typeOfSuit) {
@@ -16,9 +17,10 @@ StandardCard* CardGenerator::makeStandardCard(
         default: suit = StandardCard::SPADES; break;
       }
       int num = valueOfCard;
-      return new StandardCard(suit, num);}
+      return std::make_shared<StandardCard>(suit, num);
+}
 
-JungleSpeedCard* CardGenerator::makeJungleSpeedCard(
+std::shared_ptr<JungleSpeedCard> CardGenerator::makeJungleSpeedCard(
   const std::string s, const int i) {
   JungleSpeedCard::Colour colour;
   switch (i) {
@@ -28,5 +30,5 @@ JungleSpeedCard* CardGenerator::makeJungleSpeedCard(
     case 4: colour = JungleSpeedCard::GREEN; break;
     default: colour = JungleSpeedCard::SPECIAL; break;
   }
-  return new JungleSpeedCard(s, colour);
+  return std::make_shared<JungleSpeedCard>(s, colour);
 }

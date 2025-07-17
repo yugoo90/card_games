@@ -32,12 +32,12 @@
   Player::PlayerType Player::getType() const {return type;}
 
   bool Player::isInHand(const int cardRank) {
-    Card* tempCard;
-    StandardCard* temp2;
-    std::vector<Card*> temp = hand.getHand();
+    std::shared_ptr<Card> tempCard;
+    std::shared_ptr<StandardCard> temp2;
+    std::vector<std::shared_ptr<Card>> temp = hand->getHand();
     for (auto it = temp.begin(); it != temp.end(); it++) {
       tempCard = (*it);
-      temp2 = dynamic_cast<StandardCard*>(tempCard);
+      temp2 = std::dynamic_pointer_cast<StandardCard>(tempCard);
       if (temp2->getValue() == cardRank) {
         return true;
       }

@@ -6,6 +6,7 @@
 #ifndef CARD_H_INCLUDED
 #define CARD_H_INCLUDED
 
+#include <memory>
 #include <string>
 #include <iostream>
 
@@ -49,7 +50,7 @@ virtual std::string stringOfWholeCard() = 0;
 * @param c a card to compare to this one.
 * @return true if the cards are identical, false otherwise.
 */
-virtual bool operator==(const Card& c) = 0;
+virtual bool operator==(const std::shared_ptr<Card> c) = 0;
 
  protected:
   CardType type;

@@ -7,6 +7,7 @@
 #define HAND_H_INCLUDED
 
 #include <vector>
+#include <memory>
 #include <algorithm>
 #include "Card.h"
 #include "CardSet.h"
@@ -34,7 +35,7 @@ class Hand : public CardSet {
   /**
   * @returns the hand of a player.
   */
-  std::vector<Card*> getHand();
+  std::vector<std::shared_ptr<Card>> getHand();
 };
 
 #endif

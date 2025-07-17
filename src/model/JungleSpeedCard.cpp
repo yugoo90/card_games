@@ -21,23 +21,24 @@
 
   std::string JungleSpeedCard::getName() const {return name;}
 
-  bool JungleSpeedCard::operator==(const Card& c) {
-    const JungleSpeedCard& temp = dynamic_cast<const JungleSpeedCard&>(c);
+  bool JungleSpeedCard::operator==(const std::shared_ptr<Card> c) {
+    const std::shared_ptr<JungleSpeedCard> temp = 
+    std::dynamic_pointer_cast<JungleSpeedCard>(c);
     if ((*this).sameName(temp) && (*this).sameColour(temp))
     return true;
     return false;
   }
 
-  bool JungleSpeedCard::sameName(const JungleSpeedCard& c) {
-    if (((*this).getName()).compare(c.getName()) == 0) {
+  bool JungleSpeedCard::sameName(const std::shared_ptr<JungleSpeedCard> c) {
+    if (((*this).getName()).compare(c->getName()) == 0) {
       return true;
     } else {
       return false;
     }
   }
 
-  bool JungleSpeedCard::sameColour(const JungleSpeedCard& c) {
-    if ((*this).getColour() == c.getColour()) {
+  bool JungleSpeedCard::sameColour(const std::shared_ptr<JungleSpeedCard> c) {
+    if ((*this).getColour() == c->getColour()) {
       return true;
     } else {
       return false;

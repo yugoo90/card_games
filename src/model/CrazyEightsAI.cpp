@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 #include <vector>
 #include "CrazyEightsAI.h"
@@ -10,14 +11,14 @@ CrazyEightsAI::CrazyEightsAI(AI::Level playerLevel,
 
 CrazyEightsAI::~CrazyEightsAI() {}
 
-Card* CrazyEightsAI::strategy(Card* c) {
+std::shared_ptr<Card> CrazyEightsAI::strategy(std::shared_ptr<Card> c) {
   legalCards.clear();
-  const StandardCard& tempCard = dynamic_cast<const StandardCard&>(*c);
-  StandardCard* tempHandCard;
-  std::vector<Card*> temp;
-  temp = (*this).hand.getHand();
+  const std::shared_ptr<StandardCard> tempCard = std::dynamic_pointer_cast<StandardCard>(c);
+  std::shared_ptr<StandardCard> tempHandCard;
+  std::vector<std::shared_ptr<Card>> temp;
+  temp = (*this).hand->getHand();
   for (auto itr = temp.begin(); itr != temp.end(); itr++) {
-    tempHandCard = dynamic_cast<StandardCard*>(*itr);
+    tempHandCard = std::dynamic_pointer_cast<StandardCard>(*itr);
     if (tempHandCard->sameSuit(tempCard) || tempHandCard->sameRank(tempCard)
     || tempHandCard->getValue() == 8) {
       legalCards.push_back((*itr));
@@ -28,10 +29,10 @@ Card* CrazyEightsAI::strategy(Card* c) {
   }
   switch (aiLevel) {
     case AI::EASY: {
-      Card* minCard = legalCards[0];
+      std::shared_ptr<Card> minCard = legalCards[0];
       for (int i = 1; i < legalCards.size(); i++) {
-        if (dynamic_cast<StandardCard*>(legalCards[i])->getValue() <
-        dynamic_cast<StandardCard*>(minCard)->getValue()) {
+        if (std::dynamic_pointer_cast<StandardCard>(legalCards[i])->getValue() <
+        std::dynamic_pointer_cast<StandardCard>(minCard)->getValue()) {
           minCard = legalCards[i];
         }
       }
@@ -43,10 +44,10 @@ Card* CrazyEightsAI::strategy(Card* c) {
       break;
     }
     default: {
-      Card* maxCard = legalCards[0];
+      std::shared_ptr<Card> maxCard = legalCards[0];
       for (int i = 1; i < legalCards.size(); i++) {
-        if (dynamic_cast<StandardCard*>(legalCards[i])->getValue() >
-        dynamic_cast<StandardCard*>(maxCard)->getValue()) {
+        if (std::dynamic_pointer_cast<StandardCard>(legalCards[i])->getValue() >
+        std::dynamic_pointer_cast<StandardCard>(maxCard)->getValue()) {
           maxCard = legalCards[i];
         }
       }

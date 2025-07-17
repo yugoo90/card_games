@@ -6,6 +6,7 @@
 #ifndef CARDSET_H_INCLUDED
 #define CARDSET_H_INCLUDED
 
+#include <memory>
 #include <vector>
 #include <algorithm>
 #include "Card.h"
@@ -54,29 +55,29 @@ class CardSet {
   * @param c the card to find in the CardSet.
   * @return returns the card if found and nullptr otherwise.
   */
-  Card* getCard(const Card* c);
+  std::shared_ptr<Card> getCard(const std::shared_ptr<Card> c);
 
   /**
   * Adds a card to a CardSet.
   * @param c the card to add to the CardSet.
   */
-  void addCard(Card* c);
+  void addCard(std::shared_ptr<Card> c);
 
   /**
   * Removes a card from a CardSet.
   * @param c the card to be removed from the  CardSet.
   */
-  void removeCard(const Card* c);
+  void removeCard(const std::shared_ptr<Card> c);
 
   /**
   * Retuns the card at the top of the deck.
   * @return the card at the top of the deck.
   */
-  Card* getTop();
+  std::shared_ptr<Card> getTop();
 
  protected:
   CardSetType type;
-  std::vector <Card*> cards;
+  std::vector <std::shared_ptr<Card>> cards;
   unsigned seed;
 };
 

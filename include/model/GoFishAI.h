@@ -15,7 +15,7 @@
 /**
 * Implementation of the Go Fish AI
 */
-class GoFishAI : public AI {
+class GoFishAI : public AI, public std::enable_shared_from_this<GoFishAI> {
  public:
   /**
   * Default Constructor
@@ -34,14 +34,14 @@ class GoFishAI : public AI {
   * @param v the container that stores the player their previously asked card.
   @ return a pointer to a card chosen to be played based on the level of the AI.
   */
-  Card* strategy(std::vector<std::vector<int>> v);
+  std::shared_ptr<Card> strategy(std::vector<std::vector<int>> v);
 
   /**
   * choses a player to ask for a card.
   * @param g pointer to the game object.
   * @return returns a pointer to the player who is being asked.
   */
-  Player* ChoosePlayer(Game* g);
+  std::shared_ptr<Player> ChoosePlayer(Game* g);
 
  private:
   unsigned seed;

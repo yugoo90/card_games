@@ -82,7 +82,7 @@ class Player {
   * The players hand.
   * TransferCards will use this as a location or destination
   */
-  Hand hand;
+  std::shared_ptr<Hand> hand;
 
   /**
   * Getter for a players name

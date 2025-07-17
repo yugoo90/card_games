@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/Users/yugoo90/oat2/oatpp/install"
+                "C:/Users/yugoo90/oat2/oatpp/install/include/oatpp-1.4.0/oatpp",
+                "C:/Users/yugoo90/oat2/oatpp/install/include/oatpp-1.4.0/oatpp/"
             ],
             "defines": [
                 "_DEBUG",

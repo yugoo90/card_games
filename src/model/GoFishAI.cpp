@@ -19,11 +19,12 @@
 
   GoFishAI::~GoFishAI() {}
 
-  Card* GoFishAI::strategy(std::vector<std::vector<int>> v) {
+  std::shared_ptr<Card> GoFishAI::strategy(std::vector<std::vector<int>> v) {
     storePlayer = -1;
     int storeRank = -1;
     GameActions selfRequest;
-    std::vector<Card*> crd;
+    std::vector<std::shared_ptr<Card>> crd;
+
     switch (aiLevel) {
     case AI::EASY: break;
       case AI::HARD: {
@@ -57,15 +58,16 @@
     }
   }
   if (storePlayer != -1 && storeRank != -1) {
-    crd = selfRequest.makeRequest(this, storeRank);
+    crd = selfRequest.makeRequest(shared_from_this(), storeRank);
     return crd[0];
   } else {
-    hand.shuffleCardSet(); return hand.getTop();
+    hand->shuffleCardSet(); 
+    return hand->getTop();
   }
 }
 
-  Player* GoFishAI::ChoosePlayer(Game* g) {
-    std::vector<Player*> temp = g->getPlayers();
+  std::shared_ptr<Player> GoFishAI::ChoosePlayer(Game* g) {
+    std::vector<std::shared_ptr<Player>> temp = g->getPlayers();
 
     if (storePlayer != -1) {
       return temp[storePlayer];
@@ -73,7 +75,7 @@
     std::random_device rd;
     std::mt19937 g(rd());
     std::shuffle(std::begin(temp), std::end(temp), g);
-    Player* requestedPlayer = temp[0];
+    std::shared_ptr<Player> requestedPlayer = temp[0];
     if (requestedPlayer->getID() == (id)) {
       requestedPlayer = temp[1];
     }
