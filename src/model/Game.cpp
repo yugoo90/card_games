@@ -19,6 +19,12 @@
     numPlayers = p.size();
     numDecks = decks;
     Players = p;
+    stockPile = std::make_shared<Discard>();
+    for(auto pl : Players){
+      if(!pl->hand){
+        pl-> hand = std::make_shared<Hand>();
+      }
+    }
   }
 
   Game::~Game() {}
@@ -29,17 +35,17 @@
 
   void Game::printScore() {
     if (type != JUNGLESPEED) {
-  std::cout << "      GAME OVER.\n\nYour score for this round is: " <<
-  Players[0]->getRoundPoints() << std::endl;
-  for (auto it = Players.begin()+1; it != Players.end(); it++) {
-    std::cout << (*it)->getName() << "\'s score is: " << (*it)->getRoundPoints()
-    << std::endl;
+      std::cout << "      GAME OVER.\n\nYour score for this round is: " <<
+      Players[0]->getRoundPoints() << std::endl;
+      for(auto it = Players.begin()+1; it != Players.end(); it++) {
+        std::cout << (*it)->getName() << "\'s score is: " << (*it)->getRoundPoints()
+        << std::endl;
+      }
+      std::cout << std::endl;
+    } else {
+      std::cout << " GAME OVER.\n\n";
+    }
   }
-  std::cout << std::endl;
-} else {
-  std::cout << "      GAME OVER.\n\n";
-}
-}
 
   int Game::getNumPlayers() const {
     return numPlayers;

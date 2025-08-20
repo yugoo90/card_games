@@ -69,17 +69,19 @@ const int UI::getNumDecks(std::istream& userInput) {
   int i;
   std::string response;
   do {
-  std::cout << std::endl << "How many decks would you like to play with? ";
-  userInput >> response;
-  IH.clearStream(userInput);
-  if (!IH.isLegalInt(response)) {
-    std::cout << "\nInvalid response, please try again.\n" << std::endl;
-    continue;
-  } else {
-    i = std::stoi(response);
-  }
-  i = 1;
-} while ((!IH.isLegalInt(response)) || i != 1); //MAX AND MIN
+    std::cout << std::endl << "How many decks would you like to play with? ";
+    userInput >> response;
+    IH.clearStream(userInput);
+    if (!IH.isLegalInt(response)) {
+      std::cout << "\nInvalid response, please try again.\n" << std::endl;
+      continue;
+    } else {
+        i = std::stoi(response);
+        i = 1;
+      }
+  
+  } while ((!IH.isLegalInt(response)) || i != 1); //MAX AND MIN
+  std::cout << i << std::endl;
   std::cout << "The current version can only be played with";
   std::cout << " one deck of cards." << std::endl << std::endl;
   return i;

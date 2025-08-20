@@ -148,8 +148,8 @@ class Game {
   GameType type;
   int HAND_SIZE;
   std::vector<std::shared_ptr<Player>> Players;
-  std::shared_ptr<Deck> mainDeck = nullptr;
-  std::shared_ptr<Discard> stockPile;
+  std::shared_ptr<CardSet> mainDeck = nullptr;
+  std::shared_ptr<CardSet> stockPile;
 };
 
 #endif

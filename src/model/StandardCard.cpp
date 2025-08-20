@@ -54,11 +54,13 @@
     return toDisplay;
   }
 
-  bool StandardCard::operator==(const std::shared_ptr<Card> c) {
+  bool StandardCard::equals(const std::shared_ptr<Card> c) {
     const std::shared_ptr<StandardCard> temp = std::dynamic_pointer_cast<StandardCard>(c);
-    if ((*this).sameSuit(temp) && (*this).sameRank(temp))
-    return true;
-    return false;
+    bool same = false;
+    if ((*this).sameSuit(temp) && (*this).sameRank(temp)){
+      same = true;
+    }
+    return same;
   }
 
   std::string StandardCard::suitToString(StandardCard::Suit s) {

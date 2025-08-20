@@ -5,8 +5,8 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
-#include "UI.h"
 #include "Game.h"
+#include "UI.h"
 #include <string>
 #include <cctype>
 
@@ -29,7 +29,7 @@ std::cout << std::endl <<
 "  ╚═════╝     ╚═╝     ╚═════╝     ╚═╝    ╚═╝  ╚═══╝    ╚═╝     ╚═════╝    ╚═╝";
 std::cout << std::endl;
 std::cout << "\n\n\t\t\tSoftware Program." << std::endl << std::endl;
-std::this_thread::sleep_for(std::chrono::milliseconds(500));
+//std::this_thread::sleep_for(std::chrono::milliseconds(500));
 std::cout << "This is the Main Menu\n";
   do {
     std::shared_ptr<Game> g = mainMenu.createGame(std::cin);

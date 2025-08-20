@@ -2,7 +2,7 @@
 #define CONTROLLER_H
 
 #include "oatpp/web/server/api/ApiController.hpp"
-#include "C:/Users/yugoo90/oat2/oatpp/install/include/oatpp-1.4.0/oatpp-1.4.0/oatpp/core/macro/codegen.hpp"
+#include "oatpp/core/macro/codegen.hpp"
 
 #include <memory>
 #include <iostream>
@@ -11,6 +11,15 @@
 
 #include OATPP_CODEGEN_BEGIN(ApiController)
 
+class Controller : public oatpp::web::server::api::ApiController {
+ public:
+    Controller(OATPP_COMPONENT(std::shared_ptr<ObjectMapper>, ObjectMapper)) 
+        : oatpp::web::server::api::ApiController(ObjectMapper) {}
+    
+    ENDPOINT("GET", "/" , root) {
+
+    }
+}
 
 
 #include #include OATPP_CODEGEN_END(ApiController)

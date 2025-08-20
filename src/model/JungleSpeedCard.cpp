@@ -21,12 +21,14 @@
 
   std::string JungleSpeedCard::getName() const {return name;}
 
-  bool JungleSpeedCard::operator==(const std::shared_ptr<Card> c) {
+  bool JungleSpeedCard::equals(const std::shared_ptr<Card> c) {
     const std::shared_ptr<JungleSpeedCard> temp = 
     std::dynamic_pointer_cast<JungleSpeedCard>(c);
-    if ((*this).sameName(temp) && (*this).sameColour(temp))
-    return true;
-    return false;
+    bool same = false;
+    if ((*this).sameName(temp) && (*this).sameColour(temp)){
+      same = true;
+    }
+    return same;
   }
 
   bool JungleSpeedCard::sameName(const std::shared_ptr<JungleSpeedCard> c) {

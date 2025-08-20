@@ -91,7 +91,7 @@ class StandardCard : public Card {
   * @param Card& c this is the card to be compared to.
   * @return true if the card passed in ane the card object are equal.
   */
-  bool operator==(const std::shared_ptr<Card> c);
+  bool equals(const std::shared_ptr<Card> c);
 
   /**
   * COnverts the rank of a card which is an integer to a name which is a string.

@@ -28,7 +28,7 @@ void CardSet::addCard(std::shared_ptr<Card> c) {
 
 std::shared_ptr<Card> CardSet::getCard(const std::shared_ptr<Card> c) {
   for (auto it = cards.begin(); it != cards.end(); it++) {
-    if ((*it) == c) {
+    if (*(*it) == c) {
       return *it;
     }
   }

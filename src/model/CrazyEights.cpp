@@ -81,7 +81,7 @@ Game{decks, p} {
         }
       }
     }
-    winner-> setRoundPoints(totalPoints);
+    winner->setRoundPoints(totalPoints);
   }
 
   void CrazyEights::playerTurn(std::shared_ptr<Player> p, std::istream& userInput) {
@@ -105,7 +105,7 @@ Game{decks, p} {
           p->setMyTurn(false);
           return;
         }
-        std::cout << "You picked uo a " << 
+        std::cout << "You picked up a " << 
         mainDeck->getTop()->stringOfWholeCard() << "." << std::endl
         << std::endl;
         transferCards(mainDeck, (p->hand), mainDeck->getTop());
@@ -139,7 +139,7 @@ Game{decks, p} {
         playTurn = true;
 
         do {
-          std::cout << "\nTo play a card, enter a digit from 2-10, J, Q, K, of A.";
+          std::cout << "\nTo play a card, enter a digit from 2-10, J, Q, K, or A.";
           std::cout << "\nThen enter the suit of the card as (S)pades, (C)lubs, " <<
           "(D)iamonds, or (H)earts." << std::endl;
           std::cout << "For example \"3 H\"" << std::endl;

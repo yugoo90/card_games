@@ -50,7 +50,11 @@ virtual std::string stringOfWholeCard() = 0;
 * @param c a card to compare to this one.
 * @return true if the cards are identical, false otherwise.
 */
-virtual bool operator==(const std::shared_ptr<Card> c) = 0;
+virtual bool equals(const std::shared_ptr<Card> c) = 0;
+
+inline bool operator==(const std::shared_ptr<Card> c) {
+  return this->equals(c);
+}
 
  protected:
   CardType type;

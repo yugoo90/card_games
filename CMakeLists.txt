@@ -7,6 +7,9 @@ project(Card-Games)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# Ensure CMake uses the deglbug flag
+set(CMAKE_BUILD_TYPE Debug)
+
 # Point to oatpp's CMake config directory
 set(CMAKE_PREFIX_PATH "C:/Users/yugoo90/oat2/oatpp/install")
 
