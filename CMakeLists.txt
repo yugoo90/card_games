@@ -11,25 +11,28 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_BUILD_TYPE Debug)
 
 # Point to oatpp's CMake config directory
-set(CMAKE_PREFIX_PATH "C:/Users/yugoo90/oat2/oatpp/install")
+set(CMAKE_PREFIX_PATH "C:\\Users\\yugoo90\\oat2\\oatpp\\install")
 
 # Find oatpp
-find_package(oatpp REQUIRED)
+find_package(oatpp CONFIG 1.4.0 REQUIRED)
 
-# Include
-include_directories(
-    ${CMAKE_SOURCE_DIR}/include/model
-    ${CMAKE_SOURCE_DIR}/include/controller
-    ${CMAKE_SOURCE_DIR}/include/view
-)
-
-# Collect all .cpp files in the directory
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+# server startup
 
 # Add Executeable 
-add_executable(Card-Games ${SOURCES})
+add_executable(Card-Game-Server 
+    src/server/server.cpp
+    src/server/ServerComponent.hpp
+    src/controller/Controller.hpp
+)
 
 # Link oatpp
-target_link_libraries(Card-Games
-    oatpp::oatpp
+target_link_libraries(Card-Game-Server 
+    PRIVATE oatpp::oatpp
+    ssp
+)
+
+# Include directories
+target_include_directories(Card-Game-Server PRIVATE 
+    ${CMAKE_SOURCE_DIR}/src 
+    ${CMAKE_SOURCE_DIR/include}
 )
