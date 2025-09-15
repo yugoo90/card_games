@@ -1,8 +1,8 @@
 #ifndef PLAYERDTO_hpp
 #define PLAYERDTO_hpp
 
-#include "oatpp/core/Types.hpp"
-#include "oatpp/core/macro/codegen.hpp"
+#include "oatpp/Types.hpp"
+#include "oatpp/macro/codegen.hpp"
 
 #include <string>
 
@@ -18,7 +18,6 @@ class PlayerDTO : public oatpp::DTO {
   DTO_FIELD(Int32, score);          // Player's score
   DTO_FIELD(Int32, id);             // Player's ID
   DTO_FIELD(String, type);          // Player's type (e.g., "human", "AI")
-  DTO_FIELD(Int32, statusCode);     // Status code for the player (e.g., 0 for active, 1 for inactive)
 };
 
 #include OATPP_CODEGEN_END(DTO)

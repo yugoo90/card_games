@@ -187,3 +187,5 @@ int Game::getTopNumber() {
   std::shared_ptr<StandardCard> topCard = std::dynamic_pointer_cast<StandardCard>(stockPile->getTop());
   return topCard->getValue();
 }
+
+Game::GameType Game::getType() const {return type;}

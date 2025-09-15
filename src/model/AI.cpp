@@ -5,6 +5,7 @@
 
 
 AI::AI(Level AILevel, int playerID): Player(playerID) {
+  type = Player::AI;
   setDifficultyLevel(AILevel);}
 
 AI::~AI() {}

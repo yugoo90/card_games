@@ -142,6 +142,12 @@ class Game {
   */
   int getTopNumber();
 
+  /**
+   * Getter function for the type of game.
+   * @return a GameType indicating the type of game.
+   */
+  GameType getType() const;
+
  protected:
   int numPlayers;
   int numDecks;
