@@ -10,7 +10,13 @@
 #include "../DTO/CardDTO.hpp"
 #include "../DTO/PlayerDTO.hpp"
 #include "../DTO/ResponseDTO.hpp"
+#include "../DTO/GameTypeDTO.hpp"
+#include "../DTO/AILevelDTO.hpp"
+#include "../mappers/GameTypeMapper.hpp"
+#include "../mappers/AILevelMapper.hpp"
 #include "../../include/model/Player.h"
+#include "../../include/model/human.h"
+#include "../../include/model/AI.h"
 #include "../../include/model/Game.h"
 #include "../../include/model/UI.h"
 
@@ -36,7 +42,6 @@ class Controller : public oatpp::web::server::api::ApiController {
 
     ENDPOINT("GET", "game/players", getPlayers) {
         
-        std::vector<std::shared_ptr<Player>> gamePlayers = gameModel()->getPlayers();
         auto players = oatpp::Vector<oatpp::Object<PlayerDTO>>::createShared();
         auto responseDTO = ResponseDTO::createShared();
 
@@ -47,7 +52,7 @@ class Controller : public oatpp::web::server::api::ApiController {
 
         for(auto& p : gamePlayers){
             if(!p){
-                responseDTO->message = "No players found";
+                responseDTO->message = "No existing players found";
                 return createDtoResponse(Status::CODE_404, responseDTO);
             }
             else{
@@ -62,46 +67,107 @@ class Controller : public oatpp::web::server::api::ApiController {
         return createDtoResponse(Status::CODE_200, players);  
     }
 
-    ENDPOINT("GET", "game/info", getGameInfo) {
-        auto gameDTO = GameDTO::createShared();
+    ENDPOINT("POST", "game/human", createHuman, QUERY(String, name)) {
         auto responseDTO = ResponseDTO::createShared();
-        if(!gameModel()){
-            responseDTO->message = "No game found";
-            return createDtoResponse(Status::CODE_404, responseDTO);
+        
+        if(name->empty()){ 
+            responseDTO->message = "Name cannot be empty";
+            return createDtoResponse(Status::CODE_400, responseDTO);
         }
         else{
-            gameDTO->gameType = gameModel()->getType() == Game::GOFISH ? "Go Fish" : 
-                gameModel()->getType() == Game::CRAZYEIGHTS ? "Crazy Eights" : "Jungle Speed";
-            gameDTO->numPlayers =  gameModel()->getNumPlayers();
-            gameDTO->status = gameModel()->gameOver ? "finished" : "in_progress";
-            return createDtoResponse(Status::CODE_200, gameDTO);
-        }
-    }
-
-    ENDPOINT("POST", "game/start", startGame) {
-        auto responseDTO = ResponseDTO::createShared();
-        if(!gameModel()){
-            responseDTO->message = "Game has not started";
-            return createDtoResponse(Status::CODE_500, responseDTO);
-        }
-        else{
-            gameModel()->preGame();
-            responseDTO->message = "Game has started!";
+            gamePlayers.push_back(std::make_shared<Human>(name, 0));
+            responseDTO->message = "Player " + name + " created successfully";
             return createDtoResponse(Status::CODE_200, responseDTO);
         }
     }
 
+    ENDPOINT("POST", "game/AI", createAI, 
+        QUERY(oatpp::Enum<AILevel>::AsString, level),
+        QUERY(oatpp::Enum<GameType>::AsString, gameChoice)) {
+
+        auto responseDTO = ResponseDTO::createShared();
+        
+        Game::GameType gType = GameTypeMapper::toCppEnum(gameChoice);
+        AI::Level aiLevel = AILevelMapper::toCppEnum(level);
+        
+        /*
+        if(numOpps > 1) {
+            for(int i = 1; i <= numOpps; i++){
+                gamePlayers.push_back(mainMenu.generateAI(gType, aiLevel, i));
+            }
+        }else {
+            gamePlayers.push_back(mainMenu.generateAI(gType, aiLevel, 1));
+        }
+        */
+       if(gType == Game::GOFISH) {
+            gamePlayers.push_back(std::make_shared<GoFishAI>(aiLevel, gamePlayers.size() + 1));
+            responseDTO->message = "AI player created successfully";
+            return createDtoResponse(Status::CODE_200, responseDTO);
+       }
+       else if(gType == Game::CRAZYEIGHTS) {
+            gamePlayers.push_back(std::make_shared<CrazyEightsAI>(aiLevel, gamePlayers.size() + 1));
+            responseDTO->message = "AI player created successfully";
+            return createDtoResponse(Status::CODE_200, responseDTO);
+       }
+       else {
+            responseDTO->message = "Invalid game type for AI creation";
+            return createDtoResponse(Status::CODE_400, responseDTO);
+       }
+    }
+
+    ENDPOINT("POST", "game/startGame", createGame, 
+        QUERY(oatpp::Enum<GameType>::AsString, gameChoice)) {
+        
+        auto responseDTO = ResponseDTO::createShared();
+        auto gameDTO = GameDTO::createShared();
+        Game::GameType gtype = GameTypeMapper::toCppEnum(gameChoice);
+
+        if(!gtype){
+            responseDTO->message = "Game type must be specified to start the game";
+            return createDtoResponse(Status::CODE_400, responseDTO);
+        }
+        else if(gtype == Game::GOFISH) {
+            gameInstance = std::make_shared<GoFish>(1, gamePlayers);
+            gameDTO->gameType = GameTypeMapper::toOatppEnum(gtype);
+            gameDTO->numPlayers = gameInstance->getPlayers().size();
+            return createDtoResponse(Status::CODE_200, gameDTO);
+        }
+        else if(gtype == Game::CRAZYEIGHTS) {
+            gameInstance = std::make_shared<CrazyEights>(1, gamePlayers);
+            gameDTO->gameType = GameTypeMapper::toOatppEnum(gtype);
+            gameDTO->numPlayers = gameInstance->getPlayers().size();
+            return createDtoResponse(Status::CODE_200, gameDTO);
+        }
+        else {
+            responseDTO->message = "Invalid game type";
+            return createDtoResponse(Status::CODE_400, responseDTO);
+        }
+    }
+
+    ENDPOINT("POST", "game/numOpps", getNumOpps, 
+        QUERY(Int32, numOpps)) {
+            
+        auto responseDTO = ResponseDTO::createShared();
+        if(numOpps <= 0 || numOpps > MAX_OPPONENTS){
+            responseDTO->message = "Number of opponents must be between 1 and " + std::to_string(MAX_OPPONENTS);
+            return createDtoResponse(Status::CODE_400, responseDTO);
+        }
+        else{
+            this->numOpps = numOpps;
+            responseDTO->message = "Number of opponents set to " + std::to_string(numOpps);
+            return createDtoResponse(Status::CODE_200, responseDTO);
+        }
+
+    }
+
+
  private:
+    int MAX_OPPONENTS = 3;
+    int numOpps = 0;
+    oatpp::Enum<GameType>::AsString choice;
     UI mainMenu;
     std::shared_ptr<Game> gameInstance;
-
-    std::shared_ptr<Game> gameModel() {
-        if(!gameInstance){
-            gameInstance = mainMenu.createGame(std::cin);
-            gameInstance->play(std::cin);
-        }
-        return gameInstance;
-    }
+    std::vector<std::shared_ptr<Player>> gamePlayers;
 };
 
 #include OATPP_CODEGEN_END(ApiController)

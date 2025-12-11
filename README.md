@@ -11,4 +11,6 @@ URLs for GET ENDPOINTS
 
 URLs for POST ENDPOINTS
 * Start the game
-  * [curl -X POST "http://localhost:9200/game/start"]
+  * [curl.exe -X POST "http://localhost:8000/game/human?name=John"]
+  * [curl.exe -X POST "http://localhost:8000/game/startGame?gameChoice=CrazyEights"]
+  * [curl.exe -X POST "http://localhost:8000/game/AI?gameChoice=CrazyEights&level=Easy"]

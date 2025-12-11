@@ -1,6 +1,9 @@
 #ifndef GAMEDTO_HPP
 #define GAMEDTO_HPP
 
+#include "GameTypeDTO.hpp"
+#include "AILevelDTO.hpp"
+
 #include "oatpp/Types.hpp"
 #include "oatpp/macro/codegen.hpp"
 
@@ -14,9 +17,10 @@
 class GameDTO : public oatpp::DTO {
   DTO_INIT(GameDTO, DTO)
 
-  DTO_FIELD(String, gameType);          // Type of game (e.g., "CrazyEights", "GoFish", etc.)
   DTO_FIELD(Int32, numPlayers);     // Current number of players in the game
-  DTO_FIELD(String, status);            // Status of the game (e.g., "waiting", "in_progress", "finished")
+  DTO_FIELD(String, status);       // Current status of the game
+  DTO_FIELD(oatpp::Enum<GameType>::AsString, gameType);  // Enum field for game type
+  DTO_FIELD(oatpp::Enum<AILevel>::AsString, aiLevel);    // Enum field for AI level
 };
 
 
